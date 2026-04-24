@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bpifrance — La Banque des Entrepreneurs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Barlow:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* ── RESET ── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; border: none; background: none; font-family: inherit; }
+    ul { list-style: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ── TOKENS ── */
+    :root {
+      --yellow:  #ffcd00;
+      --dark:    #1D1D3A;
+      --cream:   #FAF8EE;
+      --gray-bg: #F4F3EF;
+      --gray2:   #706562;
+      --green:   #52B155;
+      --white:   #FFFFFF;
+      --font-h:  'Barlow Condensed', ui-sans-serif, sans-serif;
+      --font-b:  'Barlow', ui-sans-serif, sans-serif;
+      --font-i:  'IBM Plex Sans', ui-sans-serif, sans-serif;
+    }
+
+    body { font-family: var(--font-b); color: var(--dark); -webkit-font-smoothing: antialiased; }
+
+    /* ── HEADER ── */
+    .hdr { background: var(--yellow); height: 64px; position: sticky; top: 0; z-index: 100; }
+    .hdr-inner { max-width: 1320px; margin: 0 auto; padding: 0 40px; height: 100%; display: flex; align-items: center; gap: 48px; position: relative; }
+    .lang-sw { position: absolute; right: 40px; top: 50%; transform: translateY(-50%); display: flex; gap: 6px; align-items: center; }
+    .lang-btn { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; line-height: 1; text-decoration: none; opacity: .45; transition: opacity .15s, box-shadow .15s; }
+    .lang-btn:hover { opacity: .8; }
+    .lang-btn.active { opacity: 1; box-shadow: 0 0 0 2px var(--dark); }
+    .logo { flex-shrink: 0; display: flex; align-items: center; }
+    .logo img { height: 38px; width: auto; }
+    .nav-links { display: flex; gap: 32px; margin-left: 8px; }
+    .nav-links a { font-size: 14px; font-weight: 500; color: var(--dark); opacity: .75; transition: opacity .15s; white-space: nowrap; }
+    .nav-links a:hover { opacity: 1; }
+    .burger { display: none; flex-direction: column; gap: 5px; padding: 6px; margin-left: auto; }
+    .burger .bar { display: block; width: 22px; height: 2px; background: var(--dark); border-radius: 2px; transition: transform .3s, opacity .3s; }
+    .burger.open .bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .burger.open .bar:nth-child(2) { opacity: 0; }
+    .burger.open .bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ── MOBILE MENU ── */
+    .mob { display: none; position: fixed; inset: 0; top: 64px; background: var(--yellow); z-index: 99; flex-direction: column; padding: 24px 32px; border-top: 1px solid rgba(0,0,0,.08); }
+    .mob.open { display: flex; }
+    .mob a { display: block; padding: 14px 0; font-size: 18px; font-weight: 600; border-bottom: 1px solid #F0EDE8; }
+
+    /* ── HERO ── */
+    .hero {
+      background-color: var(--yellow);
+      position: relative; overflow: hidden;
+      min-height: 540px; display: flex; align-items: center;
+      padding: 80px 0 60px;
+    }
+    .hero-inner { max-width: 1320px; margin: 0 auto; padding: 0 72px; position: relative; z-index: 2; width: 100%; text-align: center; }
+    .hero-p1 {
+      font-family: var(--font-h); font-weight: 800;
+      font-size: clamp(28px, 3vw, 48px);
+      color: var(--dark); text-transform: uppercase;
+      line-height: 1; margin-bottom: 4px;
+    }
+    .hero-p2 {
+      font-family: var(--font-h); font-weight: 800;
+      font-size: clamp(52px, 7.5vw, 116px);
+      color: var(--dark); text-transform: uppercase;
+      line-height: .88; margin-bottom: 48px;
+    }
+    .hero-cta {
+      display: inline-flex; align-items: center;
+      background: var(--dark); color: var(--white);
+      padding: 16px 32px; border-radius: 100px;
+      font-size: 15px; font-weight: 600;
+      transition: opacity .2s; cursor: pointer; border: none; font-family: var(--font-b);
+    }
+    .hero-cta:hover { opacity: .85; }
+
+    /* decorative pill */
+    .hero-pill {
+      position: absolute;
+      width: 280px; height: 520px;
+      border-radius: 140px;
+      background: rgba(255, 252, 210, 0.65);
+      transform: rotate(32deg);
+      left: 50%; top: 50%;
+      margin-left: -80px; margin-top: -260px;
+      pointer-events: none; z-index: 1;
+    }
+    .hero-gcirc {
+      position: absolute;
+      width: 112px; height: 112px;
+      border-radius: 50%;
+      background: var(--green);
+      left: 63%; top: 36px;
+      pointer-events: none; z-index: 2;
+    }
+
+    /* ── CATEGORY ROW ── */
+    .cat-row { background: var(--yellow); border-bottom: none; }
+    .cat-inner { max-width: 1320px; margin: 0 auto; padding: 0 40px; display: flex; justify-content: space-around; }
+    .cat-item { display: flex; flex-direction: column; align-items: center; gap: 7px; padding: 18px 20px 16px; font-size: 13px; font-weight: 600; color: #888; cursor: pointer; border-bottom: 3px solid transparent; transition: color .15s, border-color .15s; text-decoration: none; }
+    .cat-item:hover { color: var(--dark); border-color: var(--yellow); }
+    .cat-item svg { width: 32px; height: 32px; }
+
+    /* ── BOTTOM CHAT BAR ── */
+    #chatBar { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); width: min(680px, calc(100vw - 32px)); z-index: 9999; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    #chatBarRow { display: flex; align-items: center; gap: 10px; background: white; border-radius: 100px; padding: 10px 10px 10px 22px; box-shadow: 0 4px 28px rgba(0,0,0,.13); width: 100%; border: 1.5px solid #E8E5DC; cursor: pointer; }
+    .chat-bar-input { flex: 1; border: none; outline: none; font-size: 15px; font-family: var(--font-b); color: #ABABAB; background: transparent; padding: 0; cursor: pointer; pointer-events: none; }
+    #chatPanel { position: fixed; top: 72px; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(16px); width: min(780px, calc(100vw - 48px)); border-radius: 16px; border: 1.5px solid #E0DDD6; box-shadow: 0 8px 64px rgba(0,0,0,.16); background: #fff; display: flex; flex-direction: column; z-index: 9998; overflow: hidden; opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; }
+    #chatPanel.open { opacity: 1; pointer-events: all; transform: translateX(-50%) translateY(0); }
+    .chat-panel-hdr { display: flex; align-items: center; justify-content: space-between; padding: 18px 28px; border-bottom: 1px solid #F0EDE8; flex-shrink: 0; }
+    .chat-panel-hdr img { height: 28px; width: auto; display: block; }
+    #chatClose { background: none; border: none; cursor: pointer; font-size: 18px; color: #999; line-height: 1; padding: 4px; }
+    #chatClose:hover { color: var(--dark); }
+    .chat-body { flex: 1; overflow-y: auto; padding: 32px 40px 20px; display: flex; flex-direction: column; gap: 14px; min-height: 0; }
+    .chat-welcome { color: var(--dark); font-size: 16px; line-height: 1.7; }
+    .cmsg { display: flex; flex-direction: column; max-width: 100%; }
+    .cmsg.bot { align-self: flex-start; width: 100%; }
+    .cmsg.user { align-self: flex-end; align-items: flex-end; max-width: 80%; }
+    .cmsg-bubble { font-size: 14px; line-height: 1.6; }
+    .cmsg.bot .cmsg-bubble { background: none; padding: 0; color: var(--dark); }
+    .cmsg.user .cmsg-bubble { background: #EFEFEF; color: var(--dark); padding: 10px 14px; border-radius: 18px 18px 4px 18px; }
+    .chat-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+    .chat-chip { padding: 8px 16px; border: 1.5px solid #D0CCC5; border-radius: 100px; font-size: 13px; font-weight: 500; color: var(--dark); background: white; cursor: pointer; transition: border-color .15s, background .15s; font-family: var(--font-b); box-shadow: 0 2px 8px rgba(0,0,0,.07); }
+    .chat-chip:hover { border-color: var(--dark); background: var(--cream); }
+    #chatPanel .chat-chips { padding: 10px 28px 8px; justify-content: flex-start; border-top: 1px solid #F0EDE8; flex-shrink: 0; }
+    .chat-panel-foot { display: flex; align-items: center; gap: 8px; padding: 10px 20px 16px; flex-shrink: 0; border-top: 1px solid #F0EDE8; }
+    .chat-input { flex: 1; border: none; outline: none; font-size: 15px; font-family: var(--font-b); color: var(--dark); background: transparent; padding: 0; }
+    .chat-input::placeholder { color: #ABABAB; }
+    .chat-send { width: 36px; height: 36px; border-radius: 50%; background: var(--dark); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: opacity .15s; }
+    .chat-send:hover { opacity: .8; }
+    .chat-send svg { width: 14px; height: 14px; fill: none; stroke: white; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    .typing { display: flex; align-items: center; gap: 5px; padding: 11px 15px; background: #F3F1EC; border-radius: 4px 14px 14px 14px; align-self: flex-start; }
+    .typing span { width: 6px; height: 6px; border-radius: 50%; background: #AAA; animation: blink 1.2s infinite; }
+    .typing span:nth-child(2) { animation-delay: .2s; }
+    .typing span:nth-child(3) { animation-delay: .4s; }
+    @keyframes blink { 0%,80%,100% { opacity: .2; } 40% { opacity: 1; } }
+    .mcp-call { display:flex; align-items:center; gap:10px; background:#F5F4F0; border:1px solid #DEDAD4; border-radius:8px; padding:9px 14px; align-self:flex-start; max-width:100%; }
+    .mcp-icon { font-family:monospace; font-weight:700; color:#B85C00; font-size:12px; flex-shrink:0; }
+    .mcp-name { font-size:13px; color:var(--dark); font-weight:500; flex:1; }
+    .mcp-status { font-size:15px; flex-shrink:0; }
+    .mcp-call.running .mcp-status { animation:spin .7s linear infinite; display:inline-block; }
+    .mcp-call.running .mcp-status::before { content:'↻'; }
+    .mcp-call.done .mcp-status::before { content:'✓'; color:var(--green); }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    @media (max-width: 600px) { #chatBar { bottom: 16px; width: calc(100vw - 24px); } #chatPanel { top: 64px; bottom: 16px; left: 12px; width: calc(100vw - 24px); transform: translateY(16px); } #chatPanel.open { transform: translateY(0); } }
+
+    /* ── STATS ── */
+    .stats { background: var(--cream); padding: 96px 0 80px; }
+    .stats-inner { max-width: 1000px; margin: 0 auto; padding: 0 40px; text-align: center; }
+    .stats-inner h2 { font-family: var(--font-h); font-size: 52px; font-weight: 800; color: var(--dark); margin-bottom: 64px; }
+    .rings { display: flex; align-items: center; justify-content: center; gap: 48px; margin-bottom: 56px; flex-wrap: wrap; }
+    .ring-wrap { width: 230px; height: 230px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .ring-wrap.c1 { background: var(--dark); }
+    .ring-wrap.c2 { background: var(--gray2); }
+    .ring-wrap.c3 { background: var(--yellow); }
+    .ring-inner { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 28px; }
+    .ring-num { font-family: var(--font-h); font-size: 24px; font-weight: 800; color: white; line-height: 1.2; margin-bottom: 8px; }
+    .ring-lbl { font-size: 13px; color: rgba(255,255,255,.75); line-height: 1.45; }
+    .ring-wrap.c3 .ring-num { color: var(--dark); }
+    .ring-wrap.c3 .ring-lbl { color: rgba(58,46,46,.7); }
+    .cta-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .cta-card { background: var(--white); border: 1px solid #E8E5DC; border-radius: 6px; padding: 24px 28px; display: flex; align-items: center; gap: 16px; cursor: pointer; transition: box-shadow .2s, border-color .2s; }
+    .cta-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.08); border-color: #C8C5BB; }
+    .cta-card-arr { font-size: 22px; flex-shrink: 0; }
+    .cta-card-title { font-size: 15px; font-weight: 600; color: var(--dark); line-height: 1.4; }
+
+    /* ── NOS PRIORITÉS ── */
+    .priorites { background: var(--white); padding: 80px 0 96px; }
+    .priorites-inner { max-width: 1200px; margin: 0 auto; padding: 0 40px; display: grid; grid-template-columns: 300px 1fr; gap: 72px; align-items: start; }
+    .prio-nav h2 { font-family: var(--font-h); font-size: 38px; font-weight: 800; color: var(--dark); margin-bottom: 6px; display: inline-block; border-bottom: 3px solid var(--dark); padding-bottom: 4px; }
+    .prio-list { margin-top: 28px; }
+    .prio-item { display: block; padding: 13px 16px; font-size: 15px; color: #888; cursor: pointer; border-left: 3px solid transparent; transition: color .15s, border-color .15s; line-height: 1.4; }
+    .prio-item:hover { color: var(--dark); }
+    .prio-item.active { font-weight: 700; color: var(--dark); border-left-color: var(--yellow); }
+    .prio-panel { display: none; }
+    .prio-panel.active { display: block; }
+    .prio-card { border-radius: 14px; overflow: hidden; margin-bottom: 24px; }
+    .prio-card img { width: 100%; height: 230px; object-fit: cover; display: block; border-radius: 14px; }
+    .prio-content-title { font-family: var(--font-h); font-size: 24px; font-weight: 800; color: var(--dark); margin-bottom: 12px; }
+    .prio-content-text { font-size: 15px; color: #555; line-height: 1.7; margin-bottom: 24px; }
+    .prio-btn { display: inline-block; background: var(--yellow); color: var(--dark); padding: 12px 28px; border-radius: 100px; font-size: 14px; font-weight: 700; transition: opacity .2s; }
+    .prio-btn:hover { opacity: .85; }
+
+    /* ── NEWS ── */
+    .news { background: var(--gray-bg); padding: 72px 0 80px; position: relative; overflow: hidden; }
+    .news-inner { max-width: 1100px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 1; }
+    .news h2 { font-family: var(--font-h); font-size: 46px; font-weight: 800; text-align: center; margin-bottom: 48px; color: var(--dark); }
+    .news-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+    .news-col-title { font-size: 20px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .news-col-title::before { content: ''; display: block; width: 4px; height: 24px; background: var(--yellow); border-radius: 2px; flex-shrink: 0; }
+    .n-art { background: var(--white); border-radius: 4px; padding: 18px; margin-bottom: 14px; display: grid; grid-template-columns: 1fr 116px; gap: 16px; cursor: pointer; transition: box-shadow .2s; }
+    .n-art:hover { box-shadow: 0 4px 16px rgba(0,0,0,.08); }
+    .n-art-img { border-radius: 3px; overflow: hidden; min-height: 90px; }
+    .n-art-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 9px; }
+    .tg { padding: 2px 7px; border-radius: 3px; font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: white; }
+    .tg-b { background: #1B6EC2; }
+    .tg-r { background: #CB2329; }
+    .tg-g { background: #008631; }
+    .tg-o { background: #ed7404; }
+    .tg-p { background: #7B5EA7; }
+    .n-ttl { font-size: 15px; font-weight: 700; color: var(--dark); line-height: 1.4; margin-bottom: 8px; }
+    .n-exc { font-size: 13px; color: #777; line-height: 1.6; margin-bottom: 8px; }
+    .n-date { font-size: 12px; color: #AAA; }
+    .story-item { background: var(--white); border-radius: 4px; padding: 14px 18px; margin-bottom: 10px; }
+    .story-item:last-of-type { margin-bottom: 14px; }
+    .s-ttl { font-size: 14px; font-weight: 600; color: var(--dark); line-height: 1.4; margin-top: 9px; }
+    .nl-card { background: var(--yellow); border-radius: 20px; padding: 18px 20px; }
+    .nl-card-title { font-size: 20px; font-weight: 800; color: var(--dark); margin-bottom: 8px; font-family: var(--font-h); }
+    .nl-card-text { font-size: 14px; color: var(--dark); opacity: .8; margin-bottom: 18px; }
+    .sub-btn { display: inline-block; background: var(--dark); color: var(--white); padding: 10px 24px; border-radius: 100px; font-size: 13px; font-weight: 600; transition: opacity .2s; }
+    .sub-btn:hover { opacity: .82; }
+    .see-all { display: flex; justify-content: center; margin-top: 40px; }
+    .see-all-btn { background: var(--dark); color: var(--white); padding: 14px 36px; border-radius: 100px; font-size: 14px; font-weight: 600; transition: opacity .2s; }
+    .see-all-btn:hover { opacity: .82; }
+    .fs { position: absolute; pointer-events: none; }
+    .fs-gpill  { width: 56px; height: 26px; background: var(--green); border-radius: 100px; left: 40px; top: 130px; transform: rotate(-18deg); }
+    .fs-dsq    { width: 48px; height: 48px; background: var(--dark); border-radius: 7px; left: 32px; top: 216px; transform: rotate(6deg); }
+    .fs-ycirc  { width: 34px; height: 34px; background: var(--yellow); border-radius: 50%; left: 52px; top: 330px; }
+    .fs-ytri   { width: 0; height: 0; border-left: 28px solid transparent; border-bottom: 44px solid var(--yellow); right: 64px; top: 46px; }
+    .fs-dcirc  { width: 40px; height: 40px; background: var(--dark); border-radius: 50%; right: 84px; top: 128px; }
+    .fs-gcirc2 { width: 46px; height: 46px; background: var(--green); border-radius: 50%; right: 44px; bottom: 88px; }
+
+    /* ── BRIDGE ── */
+    .bridge { background: var(--cream); padding: 64px 40px; text-align: center; }
+    .bridge-card { display: inline-flex; align-items: center; gap: 28px; background: var(--white); border-radius: 10px; padding: 28px 36px; text-align: left; border: 1px solid #E8E5DC; max-width: 560px; transition: box-shadow .2s; cursor: pointer; }
+    .bridge-card:hover { box-shadow: 0 6px 24px rgba(0,0,0,.09); }
+    .bridge-text h3 { font-family: var(--font-h); font-weight: 800; font-size: 26px; color: var(--dark); margin-bottom: 5px; }
+    .bridge-text p { font-size: 13px; color: #888; margin-bottom: 14px; }
+    .bridge-logo img { height: 24px; width: auto; }
+    .bridge-arr { font-size: 26px; margin-left: auto; flex-shrink: 0; }
+
+    /* ── FOOTER ── */
+    .ftr { display: grid; grid-template-columns: 1fr 1.35fr; }
+    .ftr-left { background: var(--yellow); padding: 56px 48px; position: relative; overflow: hidden; }
+    .ftr-left-ttl { font-family: var(--font-h); font-weight: 800; font-size: clamp(28px, 2.8vw, 38px); color: var(--dark); text-transform: uppercase; line-height: 1.0; margin-bottom: 36px; position: relative; z-index: 1; }
+    .ftr-left-ttl .sm { font-size: clamp(18px, 1.8vw, 24px); }
+    .ftr-soc-wrap { position: relative; z-index: 1; }
+    .ftr-soc-lbl { font-size: 13px; font-weight: 600; color: var(--dark); margin-bottom: 12px; }
+    .ftr-soc { display: flex; gap: 10px; }
+    .soc-btn { width: 38px; height: 38px; border-radius: 50%; background: var(--dark); display: flex; align-items: center; justify-content: center; transition: opacity .2s; }
+    .soc-btn:hover { opacity: .75; }
+    .soc-btn svg { width: 17px; height: 17px; fill: white; }
+    .ftr-vshape { position: absolute; bottom: -20px; right: -60px; width: 65%; opacity: .2; }
+    .ftr-right { background: var(--cream); padding: 56px 48px; }
+    .ftr-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+    .fc h4 { font-size: 16px; font-weight: 800; color: var(--dark); margin-bottom: 16px; }
+    .fc h5 { font-size: 13px; font-weight: 700; color: var(--dark); margin: 14px 0 8px; }
+    .fc li { margin-bottom: 7px; }
+    .fc a { font-size: 13px; color: #888; transition: color .15s; }
+    .fc a:hover { color: var(--dark); }
+    .ftr-nl-text { font-size: 13px; color: #777; margin-bottom: 14px; margin-top: 4px; line-height: 1.5; }
+    .ftr-sub-btn { display: inline-block; border: 2px solid var(--yellow); color: var(--dark); padding: 8px 22px; border-radius: 100px; font-size: 13px; font-weight: 600; transition: background .15s; }
+    .ftr-sub-btn:hover { background: var(--yellow); }
+    .ftr-bar { background: var(--white); border-top: 1px solid #E8E5DC; padding: 14px 48px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .ftr-bar-logo img { height: 32px; width: auto; }
+    .legal { display: flex; gap: 16px; flex-wrap: wrap; }
+    .legal a { font-size: 12px; color: #AAA; transition: color .15s; }
+    .legal a:hover { color: var(--dark); }
+    .ftr-copy { font-size: 12px; color: #AAA; }
+
+    /* ── MODALS ── */
+    .vmodal { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,.88); align-items: center; justify-content: center; padding: 24px; }
+    .vmodal.open { display: flex; }
+    .vframe { position: relative; width: 100%; max-width: 840px; }
+    .vclose { position: absolute; top: -46px; right: 0; width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,.15); color: white; font-size: 24px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background .2s; }
+    .vclose:hover { background: rgba(255,255,255,.3); }
+    .vph { background: var(--dark); border-radius: 12px; aspect-ratio: 16/9; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; border: 1px solid rgba(255,255,255,.1); }
+    .vph-play { width: 64px; height: 64px; border-radius: 50%; background: var(--yellow); display: flex; align-items: center; justify-content: center; }
+    .vph-play::after { content: ''; margin-left: 5px; border-left: 22px solid var(--dark); border-top: 13px solid transparent; border-bottom: 13px solid transparent; }
+    .vph p { color: rgba(255,255,255,.75); font-size: 16px; font-weight: 600; }
+    .vph small { color: rgba(255,255,255,.35); font-size: 13px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .burger { display: flex; }
+      .news-cols { grid-template-columns: 1fr; }
+      .rings { gap: 20px; }
+      .ftr { grid-template-columns: 1fr; }
+      .ftr-cols { grid-template-columns: 1fr 1fr; }
+      .cta-cards { grid-template-columns: 1fr; }
+      .priorites-inner { grid-template-columns: 1fr; gap: 32px; }
+      .cat-inner { flex-wrap: wrap; justify-content: center; }
+    }
+    @media (max-width: 600px) {
+      .hero-inner { padding: 0 24px; }
+      .hdr-inner { padding: 0 20px; }
+      .news-inner { padding: 0 20px; }
+      .ftr-cols { grid-template-columns: 1fr; }
+      .ftr-left, .ftr-right { padding: 40px 28px; }
+      .ftr-bar { padding: 14px 24px; flex-direction: column; align-items: flex-start; }
+      .legal { gap: 10px; }
+      .n-art { grid-template-columns: 1fr; }
+      .n-art-img { min-height: 140px; }
+      .fs-gpill, .fs-dsq, .fs-ycirc, .fs-ytri, .fs-dcirc, .fs-gcirc2 { display: none; }
+      .ring-wrap { width: 165px; height: 165px; }
+      .hero-pill, .hero-gcirc { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<header class="hdr">
+  <div class="hdr-inner">
+    <a href="#" class="logo" aria-label="Bpifrance — Servir l'avenir">
+      <img src="https://www.bpifrance.com/storage/sites/7/2024/01/logo-bpi-serving-the-future.png"
+           alt="bpifrance | Servir l'avenir" height="38">
+    </a>
+    <nav class="nav-links" aria-label="Navigation principale">
+      <a href="#mission">Nous découvrir</a>
+      <a href="#priorites">Nos priorités</a>
+      <a href="#chat">Nos solutions</a>
+      <a href="#news">Nos actualités</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Menu" aria-expanded="false">
+      <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+    </button>
+    <div class="lang-sw">
+      <a href="index.html" class="lang-btn" aria-label="English">🇬🇧</a>
+      <a href="index-fr.html" class="lang-btn active" aria-label="Français">🇫🇷</a>
+    </div>
+  </div>
+</header>
+
+<!-- mobile nav -->
+<div class="mob" id="mobMenu" aria-hidden="true">
+  <a href="#mission"    class="mob-lnk">Nous découvrir</a>
+  <a href="#priorites"  class="mob-lnk">Nos priorités</a>
+  <a href="#chat"       class="mob-lnk">Nos solutions</a>
+  <a href="#news"       class="mob-lnk">Nos actualités</a>
+</div>
+
+<!-- ══ HERO ══ -->
+<section class="hero" aria-labelledby="hero-ttl">
+  <!-- decorative elements -->
+  <div class="hero-pill" aria-hidden="true"></div>
+  <div class="hero-gcirc" aria-hidden="true"></div>
+
+  <div class="hero-inner">
+    <p class="hero-p1" id="hero-ttl">Bpifrance,</p>
+    <p class="hero-p2">la banque des<br>entrepreneurs</p>
+    <button class="hero-cta" id="watchBtn" aria-label="Un besoin pour votre entreprise ?">
+      Un besoin pour votre entreprise ?
+    </button>
+  </div>
+</section>
+
+<!-- ══ CATEGORY ROW ══ -->
+<div class="cat-row" aria-label="Nos domaines">
+  <div class="cat-inner">
+    <a href="#" class="cat-item">
+      <svg xmlns="http://www.w3.org/2000/svg" width="42" height="38" viewBox="0 0 42 38">
+        <g fill="none">
+          <rect fill="#FFF" x="10.5" y="11.642" width="21" height="21" rx="10.5"/>
+          <rect fill="#FFF" x="16.5" y="28.5" width="9" height="9" rx="4.5"/>
+          <circle fill="#786E64" cx="4.25" cy="29.25" r="4.25"/>
+          <circle fill="#786E64" cx="5.25" cy="12.392" r="4.25"/>
+          <circle fill="#786E64" cx="21.25" cy="4.25" r="4.25"/>
+          <circle fill="#786E64" cx="37.75" cy="29.25" r="4.25"/>
+          <circle fill="#786E64" cx="36.75" cy="12.392" r="4.25"/>
+        </g>
+      </svg>
+      Création
+    </a>
+    <a href="#" class="cat-item">
+      <svg xmlns="http://www.w3.org/2000/svg" width="38" height="24" viewBox="0 0 38 24">
+        <g fill-rule="nonzero">
+          <rect fill="#FFF" x="16" width="22" height="22" rx="4"/>
+          <rect fill="#786E64" y="11" width="11" height="11" rx="5.5"/>
+          <rect fill="#786E64" y="22" width="38" height="2" rx="1"/>
+        </g>
+      </svg>
+      Innovation
+    </a>
+    <a href="#" class="cat-item">
+      <svg xmlns="http://www.w3.org/2000/svg" width="33" height="28" viewBox="0 0 33 28">
+        <g fill-rule="nonzero">
+          <path d="M14.051 2.415a4.173 4.173 0 0 1 6.98-.086 16.4 16.4 0 0 1-.985 18.034 16.4 16.4 0 0 1-16.75 6.753 4.173 4.173 0 0 1-2.174-6.634L14.051 2.415z" fill="#FFF"/>
+          <circle fill="#786E64" cx="26.579" cy="21.267" r="6"/>
+        </g>
+      </svg>
+      Financement
+    </a>
+    <a href="#" class="cat-item">
+      <svg xmlns="http://www.w3.org/2000/svg" width="31" height="24" viewBox="0 0 31 24">
+        <g fill-rule="nonzero">
+          <circle fill="#786E64" cx="6" cy="18" r="6"/>
+          <circle fill="#FFF" cx="19" cy="12" r="12"/>
+        </g>
+      </svg>
+      Investissement
+    </a>
+    <a href="#" class="cat-item">
+      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 135.819 136.028">
+        <g fill-rule="evenodd" clip-rule="evenodd">
+          <path d="M22.143 90.151c11.736-.101 21.412 9.313 21.596 21.01.182 11.576-9.411 21.374-21.107 21.559-11.564.183-21.461-9.477-21.588-21.07-.128-11.65 9.44-21.4 21.099-21.499zm90.319-.002c11.762-.077 21.35 9.35 21.446 21.086.096 11.71-9.409 21.386-21.108 21.487-11.605.102-21.37-9.505-21.513-21.163-.142-11.642 9.441-21.332 21.175-21.41zm-.098-47.835c-11.709-.092-21.294-9.832-21.085-21.425.213-11.728 9.792-20.981 21.62-20.887 11.83.095 21.141 9.589 21.008 21.423-.131 11.816-9.586 20.983-21.543 20.889zM22.71.001c11.735.116 21.261 9.845 21.03 21.482-.232 11.744-9.813 20.948-21.68 20.828C10.306 42.191.832 32.51 1.045 20.833 1.258 9.094 10.836-.116 22.71.001z" fill="#786E64"/>
+          <path d="M0 70.18c.077-6.955.711-11.896 1.754-16.798.564-2.657 1.799-4.274 4.804-3.651 2.964.614 3.683 2.629 3.081 5.246-1.893 8.249-1.846 16.505-.363 24.799.499 2.789-.047 5.036-3.396 5.484-3.132.419-4.13-1.604-4.489-4.12C.779 76.861.298 72.563 0 70.18zm65.27 65.848c-3.245-.486-7.36-1.059-11.459-1.732-2.617-.43-3.688-2.011-3.121-4.652.561-2.619 2.215-3.64 4.751-3.114 8.609 1.785 17.185 1.663 25.769-.191 2.471-.533 4.292.337 4.813 3.021.55 2.829-.645 4.333-3.499 4.901-5.409 1.074-10.848 1.672-17.254 1.767zM80.393 9.653c-8.53-1.997-17.574-1.591-26.641.261-2.018.412-3.486-.838-3.932-2.953-.465-2.202-.035-4.122 2.391-4.737 9.995-2.533 20.046-2.661 30.099-.33 2.329.54 3.188 2.151 2.831 4.501-.373 2.449-1.887 3.345-4.748 3.258zm55.426 60.162c-.22 2.075-.533 5.72-1.016 9.342-.342 2.563-1.479 4.488-4.55 4.058-2.966-.415-3.847-2.349-3.39-5.038 1.447-8.503.791-16.899-1.076-25.261-.584-2.614.074-4.613 3.055-5.255 3.152-.68 4.242 1.382 4.799 3.773 1.282 5.519 2.126 11.111 2.178 18.381z" fill="#FFF"/>
+        </g>
+      </svg>
+      International
+    </a>
+    <a href="#" class="cat-item">
+      <svg xmlns="http://www.w3.org/2000/svg" width="40" height="26" viewBox="0 0 40 26">
+        <g fill-rule="nonzero">
+          <rect fill="#FFF" x="3.955" width="25" height="25" rx="3"/>
+          <circle fill="#786E64" cx="5.5" cy="19.858" r="5.5"/>
+          <circle fill="#786E64" cx="34.5" cy="19.858" r="5.5"/>
+        </g>
+      </svg>
+      Conseil
+    </a>
+  </div>
+</div>
+
+<!-- ══ STATS ══ -->
+<section id="mission" class="stats" aria-labelledby="stats-h2">
+  <div class="stats-inner">
+    <h2 id="stats-h2">Bpifrance en quelques chiffres</h2>
+    <div class="rings">
+      <div class="ring-wrap c1" role="figure" aria-label="17,32 milliards d'euros de financement direct">
+        <div class="ring-inner">
+          <div class="ring-num">€ 17,32 Md</div>
+          <div class="ring-lbl">de financement direct</div>
+        </div>
+      </div>
+      <div class="ring-wrap c2" role="figure" aria-label="8,2 milliards d'euros de prêts bancaires garantis">
+        <div class="ring-inner">
+          <div class="ring-num">€ 8,2 Md</div>
+          <div class="ring-lbl">de prêts bancaires<br>garantis</div>
+        </div>
+      </div>
+      <div class="ring-wrap c3" role="figure" aria-label="4,47 milliards d'euros d'investissement">
+        <div class="ring-inner">
+          <div class="ring-num">€ 4,47 Md</div>
+          <div class="ring-lbl">d'investissement</div>
+        </div>
+      </div>
+    </div>
+    <div class="cta-cards">
+      <a href="#priorites" class="cta-card">
+        <span class="cta-card-arr">→</span>
+        <span class="cta-card-title">Nos priorités stratégiques</span>
+      </a>
+      <a href="#chat" class="cta-card">
+        <span class="cta-card-arr">→</span>
+        <span class="cta-card-title">Un siècle d'encouragement à l'entrepreneuriat</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ NOS PRIORITÉS ══ -->
+<section id="priorites" class="priorites" aria-labelledby="prio-h2">
+  <div class="priorites-inner">
+    <!-- Left nav -->
+    <div class="prio-nav">
+      <h2 id="prio-h2">Nos priorités</h2>
+      <div class="prio-list">
+        <a class="prio-item active" data-prio="defense">Le Fonds Bpifrance Défense</a>
+        <a class="prio-item" data-prio="sante">Le Plan Santé</a>
+        <a class="prio-item" data-prio="climat">Le Plan Climat</a>
+        <a class="prio-item" data-prio="tech">Le Plan Tech</a>
+        <a class="prio-item" data-prio="creation">Le Plan Création</a>
+        <a class="prio-item" data-prio="secteurs">Les secteurs stratégiques</a>
+        <a class="prio-item" data-prio="industrie">Le Plan Industrie</a>
+      </div>
+    </div>
+
+    <!-- Right panels -->
+    <div class="prio-panels">
+
+      <div class="prio-panel active" data-panel="defense">
+        <div class="prio-card">
+          <img src="./Bpifrance%20-%20Servir%20l'Avenir_files/VISUEL_HOME_FONDS_DEFENSE.jpg.webp" alt="Fonds Bpifrance Défense" loading="lazy">
+        </div>
+        <div class="prio-content-title">Le Fonds Bpifrance Défense</div>
+        <div class="prio-content-text">Le fonds Bpifrance Défense S.L.P. permet d'investir principalement dans des entreprises françaises et accessoirement européennes qui répondent aux défis de souveraineté et de sécurité. C'est une manière concrète d'agir pour l'avenir.</div>
+        <a href="#" class="prio-btn">En savoir plus</a>
+      </div>
+
+      <div class="prio-panel" data-panel="sante">
+        <div class="prio-card">
+          <img src="./Bpifrance%20-%20Servir%20l'Avenir_files/HEADER_PLAN_SANTE_1871x992_0.jpg.webp" alt="Plan Santé" loading="lazy">
+        </div>
+        <div class="prio-content-title">Le Plan Santé</div>
+        <div class="prio-content-text">Le Plan Santé a pour ambition d'encourager l'émergence et la croissance des futurs champions européens de la santé. Articulé autour de quatre verticales clés, ce plan représente 10 Md€ qui seront déployés d'ici 2030.</div>
+        <a href="#" class="prio-btn">En savoir plus</a>
+      </div>
+
+      <div class="prio-panel" data-panel="climat">
+        <div class="prio-card">
+          <img src="./Bpifrance%20-%20Servir%20l'Avenir_files/VISUEL-HOME-CLIMAT.jpg.webp" alt="Plan Climat" loading="lazy">
+        </div>
+        <div class="prio-content-title">Le Plan Climat</div>
+        <div class="prio-content-text">Face à l'urgence climatique et à la nécessité de respecter les limites planétaires, la France s'est engagée dans une transformation profonde de son économie.</div>
+        <a href="#" class="prio-btn">Découvrir</a>
+      </div>
+
+      <div class="prio-panel" data-panel="tech">
+        <div class="prio-card">
+          <img src="./Bpifrance%20-%20Servir%20l'Avenir_files/VISUEL-HOME-TECH.jpg.webp" alt="Plan Tech" loading="lazy">
+        </div>
+        <div class="prio-content-title">Le Plan Tech</div>
+        <div class="prio-content-text">Acteur clé du soutien à l'innovation en France, Bpifrance déploie son Plan Tech visant à propulser l'écosystème des start-ups vers de nouveaux sommets.</div>
+        <a href="#" class="prio-btn">Découvrir</a>
+      </div>
+
+      <div class="prio-panel" data-panel="creation">
+        <div class="prio-card">
+          <img src="./Bpifrance%20-%20Servir%20l'Avenir_files/VISUEL-HOME-FIERS.jpg.webp" alt="Plan Création" loading="lazy">
+        </div>
+        <div class="prio-content-title">Le Plan Création</div>
+        <div class="prio-content-text">Bpifrance se mobilise avec les réseaux d'accompagnement via le Collectif Cap Créa pour doubler le nombre de créations d'entreprises pérennes, génératrices de valeur ajoutée et d'emploi en France entre 2024 et 2028.</div>
+        <a href="#" class="prio-btn">Découvrir</a>
+      </div>
+
+      <div class="prio-panel" data-panel="secteurs">
+        <div class="prio-card">
+          <img src="./Bpifrance%20-%20Servir%20l'Avenir_files/VISUEL-HOME-FER.jpg.webp" alt="Secteurs stratégiques" loading="lazy">
+        </div>
+        <div class="prio-content-title">Les secteurs stratégiques</div>
+        <div class="prio-content-text">Bpifrance réaffirme sa présence aux côtés des acteurs de la Santé, de la Cybersécurité, de la Défense et de la French Touch.</div>
+        <a href="#" class="prio-btn">Découvrir</a>
+      </div>
+
+      <div class="prio-panel" data-panel="industrie">
+        <div class="prio-card">
+          <img src="./Bpifrance%20-%20Servir%20l'Avenir_files/VISUEL-HOME-IA.jpg.webp" alt="Plan Industrie" loading="lazy">
+        </div>
+        <div class="prio-content-title">Le Plan Industrie</div>
+        <div class="prio-content-text">La réindustrialisation de la France s'impose comme un impératif, porteur de souveraineté, d'équilibre du commerce extérieur, de productivité, d'emplois, et de vitalité économique.</div>
+        <a href="#" class="prio-btn">Découvrir</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ NEWS ══ -->
+<section id="news" class="news" aria-labelledby="news-h2">
+  <div class="fs fs-gpill" aria-hidden="true"></div>
+  <div class="fs fs-dsq"   aria-hidden="true"></div>
+  <div class="fs fs-ycirc" aria-hidden="true"></div>
+  <div class="fs fs-ytri"  aria-hidden="true"></div>
+  <div class="fs fs-dcirc" aria-hidden="true"></div>
+  <div class="fs fs-gcirc2" aria-hidden="true"></div>
+
+  <div class="news-inner">
+    <h2 id="news-h2">Nos Actualités</h2>
+    <div class="news-cols">
+      <div>
+        <div class="news-col-title">Actualités</div>
+        <article class="n-art">
+          <div>
+            <div class="tags">
+              <span class="tg tg-b">Afrique</span>
+              <span class="tg tg-b">Entrepreneurs</span>
+              <span class="tg tg-b">International</span>
+              <span class="tg tg-r">Actualités</span>
+            </div>
+            <div class="n-ttl">Co-Industrialisation, une stratégie de croissance durable pour les entreprises françaises en Afrique</div>
+            <div class="n-exc">L'Afrique est devenue une priorité stratégique pour les entreprises françaises à la recherche de débouchés à l'export…</div>
+            <div class="n-date">20/04/2026</div>
+          </div>
+          <div class="n-art-img">
+            <img src="https://www.bpifrance.com/storage/sites/7/2026/04/pexels-amurephotography-9833514-768x512.jpg"
+                 alt="Co-industrialisation en Afrique" loading="lazy">
+          </div>
+        </article>
+        <article class="n-art">
+          <div>
+            <div class="tags">
+              <span class="tg tg-b">Bpifrance</span>
+              <span class="tg tg-b">Entrepreneuriat</span>
+              <span class="tg tg-g">Études</span>
+            </div>
+            <div class="n-ttl">Impact de Bpifrance :</div>
+            <div class="n-exc">Le livret d'indicateurs des actions de Bpifrance en 2023 présente une analyse approfondie de l'impact de la banque publique d'investissement…</div>
+            <div class="n-date">15/01/2025</div>
+          </div>
+          <div class="n-art-img">
+            <img src="https://www.bpifrance.com/storage/sites/7/2025/01/pexels-goumbik-590022-768x509.jpg"
+                 alt="Impact de Bpifrance" loading="lazy">
+          </div>
+        </article>
+      </div>
+      <div>
+        <div class="news-col-title">Témoignages</div>
+        <div class="story-item">
+          <div class="tags">
+            <span class="tg tg-b">Entrepreneurs</span>
+            <span class="tg tg-b">International</span>
+            <span class="tg tg-r">Actualités</span>
+            <span class="tg tg-o">Témoignages</span>
+          </div>
+          <div class="s-ttl">Big 2025 : un événement singulier pour aider les entreprises françaises à booster leur développement international</div>
+        </div>
+        <div class="story-item">
+          <div class="tags">
+            <span class="tg tg-b">Bpifrance</span>
+            <span class="tg tg-b">Économie</span>
+            <span class="tg tg-r">Actualités</span>
+            <span class="tg tg-o">Témoignages</span>
+          </div>
+          <div class="s-ttl">Capital-risque : en 10 ans, Bpifrance a largement contribué à l'essor de l'écosystème de financement des start-up françaises</div>
+        </div>
+        <div class="nl-card">
+          <div class="nl-card-title">Newsletter</div>
+          <div class="nl-card-text">Recevez votre newsletter personnalisée directement dans votre boîte mail</div>
+          <a href="#" class="sub-btn" id="subBtn">S'abonner</a>
+        </div>
+      </div>
+    </div>
+    <div class="see-all">
+      <a href="#" class="see-all-btn">Voir toutes les actualités</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ BRIDGE ══ -->
+<section class="bridge" aria-label="Bpifrance.fr">
+  <a href="#" class="bridge-card">
+    <div class="bridge-text">
+      <h3>Bpifrance.fr</h3>
+      <p>Solutions pour les entrepreneurs français<br>Découvrez toutes les informations ici</p>
+      <div class="bridge-logo">
+        <img src="https://www.bpifrance.com/storage/sites/7/2024/01/logo-bpifrance-servir-l-avenir.svg"
+             alt="bpifrance — servir l'avenir">
+      </div>
+    </div>
+    <div class="bridge-arr">→</div>
+  </a>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="ftr">
+    <div class="ftr-left">
+      <svg class="ftr-vshape" viewBox="0 0 500 380" fill="none" aria-hidden="true">
+        <path d="M 60,360 C 60,360 130,200 220,240 C 310,280 360,60 460,20" stroke="white" stroke-width="90" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div style="position:absolute;top:24px;right:80px;width:72px;height:72px;border-radius:50%;background:var(--green);" aria-hidden="true"></div>
+      <div class="ftr-left-ttl">
+        <span class="sm">Bpifrance,</span><br>
+        La banque des<br>entrepreneurs
+      </div>
+      <div class="ftr-soc-wrap">
+        <div class="ftr-soc-lbl">Suivez-nous !</div>
+        <div class="ftr-soc">
+          <a href="#" class="soc-btn" aria-label="Facebook">
+            <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="#" class="soc-btn" aria-label="YouTube">
+            <svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.97C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="rgba(29,29,58,0.9)"/></svg>
+          </a>
+          <a href="#" class="soc-btn" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          </a>
+          <a href="#" class="soc-btn" aria-label="Instagram">
+            <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" fill="rgba(29,29,58,0.85)"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke="rgba(29,29,58,0.85)" stroke-width="2"/></svg>
+          </a>
+          <a href="#" class="soc-btn" aria-label="X (Twitter)">
+            <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="ftr-right">
+      <div class="ftr-cols">
+        <div class="fc">
+          <h4>Qui sommes-nous</h4>
+          <ul>
+            <li><a href="#">Notre mission</a></li>
+            <li><a href="#">Pourquoi la France</a></li>
+            <li><a href="#">Notre histoire</a></li>
+            <li><a href="#">Présence internationale</a></li>
+            <li><a href="#">Nos actualités</a></li>
+          </ul>
+          <h4 style="margin-top:28px;">Documentation</h4>
+          <ul><li><a href="#">Bibliothèque de documents</a></li></ul>
+          <h4 style="margin-top:28px;">Newsletter</h4>
+          <div class="ftr-nl-text">Recevez votre newsletter personnalisée directement dans votre boîte mail</div>
+          <a href="#" class="ftr-sub-btn">S'abonner</a>
+        </div>
+        <div class="fc">
+          <h4>Ce que nous faisons</h4>
+          <h5>Entrepreneurs</h5>
+          <ul>
+            <li><a href="#">Banque</a></li>
+            <li><a href="#">Accompagnement</a></li>
+            <li><a href="#">Assurance-crédit export</a></li>
+            <li><a href="#">Solutions pour entreprises étrangères</a></li>
+          </ul>
+          <h5>Institutions</h5>
+          <ul>
+            <li><a href="#">Capital-investissement</a></li>
+            <li><a href="#">Agence de crédit export</a></li>
+            <li><a href="#">Coopération institutionnelle</a></li>
+            <li><a href="#">Relations investisseurs</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ftr-bar">
+    <div class="ftr-bar-logo">
+      <img src="https://www.bpifrance.com/storage/sites/7/2024/01/logo-bpi-serving-the-future.png"
+           alt="bpifrance — Servir l'avenir" height="32">
+    </div>
+    <nav class="legal" aria-label="Liens légaux">
+      <a href="#">Mentions légales</a>
+      <a href="#">Données personnelles</a>
+      <a href="#">Gestion des cookies</a>
+      <a href="#">Accessibilité : non conforme</a>
+    </nav>
+    <div class="ftr-copy">© Bpifrance 2024</div>
+  </div>
+</footer>
+
+<!-- ══ MODAL VIDÉO ══ -->
+<div class="vmodal" id="vModal" role="dialog" aria-label="Voir la vidéo" aria-modal="true">
+  <div class="vframe">
+    <button class="vclose" id="vClose" aria-label="Fermer">×</button>
+    <div class="vph">
+      <div class="vph-play"></div>
+      <p>Bpifrance — La Banque des Entrepreneurs</p>
+      <small>Remplacez par l'URL de votre vidéo</small>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL NEWSLETTER ══ -->
+<div class="vmodal" id="nlModal" role="dialog" aria-label="Newsletter" aria-modal="true">
+  <div class="vframe" style="max-width:480px;">
+    <button class="vclose" id="nlClose" aria-label="Fermer">×</button>
+    <div class="vph" style="aspect-ratio:auto;padding:48px 40px;gap:20px;border-radius:10px;">
+      <div style="width:100%;text-align:left;">
+        <div style="font-family:var(--font-h);font-size:30px;font-weight:800;color:white;margin-bottom:8px;">Newsletter</div>
+        <div style="font-size:14px;color:rgba(255,255,255,.65);margin-bottom:24px;">Recevez votre newsletter personnalisée directement dans votre boîte mail</div>
+        <form id="nlForm" novalidate style="display:flex;gap:8px;flex-wrap:wrap;">
+          <input type="email" placeholder="Votre adresse e-mail" required
+            style="flex:1;min-width:180px;padding:12px 16px;border:none;border-radius:4px;font-size:14px;font-family:var(--font-b);outline:none;">
+          <button type="submit"
+            style="background:var(--yellow);color:var(--dark);padding:12px 20px;border-radius:4px;font-size:14px;font-weight:700;font-family:var(--font-b);cursor:pointer;border:none;white-space:nowrap;">
+            S'abonner
+          </button>
+        </form>
+        <div id="nlOk" style="display:none;margin-top:16px;padding:12px 16px;background:rgba(82,177,85,.2);border-radius:4px;color:rgba(255,255,255,.9);font-size:14px;font-weight:600;">
+          ✓ Vous êtes bien inscrit(e) à notre newsletter !
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BOTTOM CHAT BAR ══ -->
+<div id="chatPanel" role="dialog" aria-label="Assistant Bpifrance" aria-modal="false">
+  <div class="chat-panel-hdr">
+    <img src="https://www.bpifrance.com/storage/sites/7/2024/01/logo-bpi-serving-the-future.png" alt="Bpifrance" height="24">
+    <button id="chatClose" aria-label="Fermer">✕</button>
+  </div>
+  <div class="chat-body" id="chatBody">
+    <div class="chat-welcome" id="chatWelcome">
+      <p>Bonjour, je suis l'assistant Bpifrance. Je peux vous présenter nos offres pour créer, financer, développer, innover ou transmettre votre entreprise, ainsi que des accompagnements dédiés aux dirigeants et à leurs enjeux du quotidien.</p>
+      <p style="margin-top:10px;">Je peux vous orienter simplement vers les bonnes informations ou le bon interlocuteur 😉 Parlez-moi de votre projet.</p>
+    </div>
+  </div>
+  <div class="chat-chips" id="chatChips">
+    <button class="chat-chip" data-intent="discover">Je veux découvrir les offres Bpifrance</button>
+  </div>
+  <div class="chat-panel-foot">
+    <input class="chat-input" id="chatInput" type="text" placeholder="" autocomplete="off" aria-label="Posez une question">
+    <button class="chat-send" id="chatSend" aria-label="Envoyer">
+      <svg viewBox="0 0 24 24"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>
+    </button>
+  </div>
+</div>
+<div id="chatBar">
+  <div id="chatBarRow">
+    <input class="chat-bar-input" placeholder="Comment Bpifrance peut soutenir mon projet ?" readonly aria-label="Ouvrir le chat">
+    <button class="chat-send" aria-hidden="true" tabindex="-1">
+      <svg viewBox="0 0 24 24"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+/* ── BURGER MENU ── */
+const burger  = document.getElementById('burger');
+const mobMenu = document.getElementById('mobMenu');
+let menuOpen  = false;
+function toggleMenu() {
+  menuOpen = !menuOpen;
+  burger.classList.toggle('open', menuOpen);
+  burger.setAttribute('aria-expanded', menuOpen);
+  mobMenu.classList.toggle('open', menuOpen);
+  mobMenu.setAttribute('aria-hidden', !menuOpen);
+  document.body.style.overflow = menuOpen ? 'hidden' : '';
+}
+burger.addEventListener('click', toggleMenu);
+document.querySelectorAll('.mob-lnk').forEach(a => a.addEventListener('click', () => { if (menuOpen) toggleMenu(); }));
+
+/* ── SMOOTH SCROLL ── */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', function(e) {
+    const id = this.getAttribute('href');
+    const t  = document.querySelector(id);
+    if (!t || id === '#') return;
+    e.preventDefault();
+    if (menuOpen) toggleMenu();
+    t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+/* ── HERO CTA → open chat panel ── */
+const watchBtn = document.getElementById('watchBtn');
+watchBtn.addEventListener('click', () => {
+  openPanel();
+  setTimeout(() => {
+    const inp = document.getElementById('chatInput');
+    inp.focus();
+    inp.placeholder = 'Posez-moi votre question…';
+  }, 220);
+});
+
+/* ── VIDEO MODAL (kept for ESC handler) ── */
+const vModal = document.getElementById('vModal');
+const vClose = document.getElementById('vClose');
+function openV()  { vModal.classList.add('open');  document.body.style.overflow = 'hidden'; }
+function closeV() { vModal.classList.remove('open'); document.body.style.overflow = ''; }
+vClose.addEventListener('click', closeV);
+vModal.addEventListener('click', e => { if (e.target === vModal) closeV(); });
+
+/* ── NEWSLETTER MODAL ── */
+const nlModal = document.getElementById('nlModal');
+const nlClose = document.getElementById('nlClose');
+function openNl()  { nlModal.classList.add('open');  document.body.style.overflow = 'hidden'; }
+function closeNl() { nlModal.classList.remove('open'); document.body.style.overflow = ''; }
+document.querySelectorAll('#subBtn, .ftr-sub-btn').forEach(b => b.addEventListener('click', e => { e.preventDefault(); openNl(); }));
+nlClose.addEventListener('click', closeNl);
+nlModal.addEventListener('click', e => { if (e.target === nlModal) closeNl(); });
+document.getElementById('nlForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const inp = this.querySelector('input');
+  if (!inp.value || !inp.validity.valid) { inp.focus(); return; }
+  this.style.display = 'none';
+  document.getElementById('nlOk').style.display = 'block';
+  setTimeout(closeNl, 2400);
+});
+
+/* ── PRIORITÉS TABS ── */
+document.querySelectorAll('.prio-item').forEach(item => {
+  item.addEventListener('click', function(e) {
+    e.preventDefault();
+    const key = this.dataset.prio;
+    document.querySelectorAll('.prio-item').forEach(i => i.classList.remove('active'));
+    document.querySelectorAll('.prio-panel').forEach(p => p.classList.remove('active'));
+    this.classList.add('active');
+    const panel = document.querySelector(`.prio-panel[data-panel="${key}"]`);
+    if (panel) panel.classList.add('active');
+  });
+});
+
+/* ── CHAT PANEL ── */
+const chatPanel = document.getElementById('chatPanel');
+const chatBar   = document.getElementById('chatBar');
+function openPanel() { chatPanel.classList.add('open'); chatBar.style.display = 'none'; }
+function closePanel() { chatPanel.classList.remove('open'); chatBar.style.display = ''; }
+document.getElementById('chatClose').addEventListener('click', closePanel);
+chatBar.addEventListener('click', function(e) {
+  openPanel();
+  setTimeout(() => document.getElementById('chatInput').focus(), 220);
+});
+
+/* ── CHAT GHOST TYPING ── */
+(function() {
+  const prompts = [
+    "Je recherche un financement export…",
+    "Comment Bpifrance peut soutenir ma startup ?",
+    "Quelles solutions pour les investisseurs étrangers ?",
+    "J'ai besoin d'accompagnement pour mon entreprise…",
+    "Je suis une institution souhaitant co-investir…"
+  ];
+  const inp = document.getElementById('chatInput');
+  let pi = 0, ci = 0, deleting = false, paused = false, timer = null;
+  function tick() {
+    if (paused) return;
+    const target = prompts[pi];
+    if (!deleting) {
+      ci++;
+      inp.placeholder = target.slice(0, ci);
+      if (ci === target.length) { deleting = true; timer = setTimeout(tick, 2200); return; }
+      timer = setTimeout(tick, 52);
+    } else {
+      ci--;
+      inp.placeholder = target.slice(0, ci);
+      if (ci === 0) { deleting = false; pi = (pi + 1) % prompts.length; timer = setTimeout(tick, 420); return; }
+      timer = setTimeout(tick, 28);
+    }
+  }
+  tick();
+  inp.addEventListener('focus', () => { paused = true; clearTimeout(timer); inp.placeholder = 'Posez-moi votre question…'; });
+  inp.addEventListener('blur',  () => { if (!inp.value) { paused = false; inp.placeholder = prompts[pi].slice(0, ci); tick(); } });
+})();
+
+/* ── CHAT ── */
+const INITIAL_CHIPS = [
+  { label: "Je veux découvrir les offres Bpifrance", intent: 'discover' }
+];
+const CHAT_FLOWS = {
+  discover: {
+    mcpCalls: ["Bpifrance - Trouvez votre solution", "Choix du parcours"],
+    msg: "Je vous aide à trouver les solutions Bpifrance adaptées à votre besoin. Choisissez l'option qui correspond à votre situation.",
+    chips: [
+      { label: "J'ai une entreprise",      intent: 'existing' },
+      { label: "Créer une entreprise",     intent: 'create' },
+      { label: "Reprendre une entreprise", intent: 'takeover' }
+    ]
+  },
+  existing: {
+    msg: "Pour une entreprise existante, Bpifrance propose des financements (prêts, garanties, investissement), des programmes d'accélération et un accompagnement sur-mesure. Que recherchez-vous ?",
+    chips: [
+      { label: "Financement",    intent: 'financing' },
+      { label: "Accompagnement", intent: 'coaching' },
+      { label: "Export",         intent: 'export' }
+    ]
+  },
+  create: {
+    msg: "Pour créer votre entreprise, Bpifrance vous aide à financer le démarrage avec des prêts d'honneur, des garanties bancaires et des dispositifs d'amorçage. Que souhaitez-vous explorer ?",
+    chips: [
+      { label: "Financement création",    intent: 'financing' },
+      { label: "Accompagnement créateur", intent: 'coaching' },
+      { label: "Recommencer",             intent: 'restart' }
+    ]
+  },
+  takeover: {
+    msg: "Bpifrance accompagne les projets de reprise avec des garanties sur les prêts bancaires, des co-investissements et des dispositifs dédiés à la transmission d'entreprise.",
+    chips: [
+      { label: "Garanties reprise", intent: 'financing' },
+      { label: "Co-investissement", intent: 'equity' },
+      { label: "Recommencer",       intent: 'restart' }
+    ]
+  },
+  entrepreneur: {
+    msg: "Parfait ! En tant qu'entrepreneur, Bpifrance peut soutenir votre croissance grâce au financement, à l'accompagnement et aux solutions export. Que recherchez-vous ?",
+    chips: [
+      { label: "J'ai besoin d'un financement",    intent: 'financing' },
+      { label: "J'ai besoin d'un accompagnement", intent: 'coaching' },
+      { label: "Soutien à l'export",              intent: 'export' }
+    ]
+  },
+  institution: {
+    msg: "En tant qu'institution ou investisseur, Bpifrance propose le co-investissement, le crédit export et la coopération institutionnelle. Qu'est-ce qui vous intéresse le plus ?",
+    chips: [
+      { label: "Co-investissement en capital",  intent: 'equity' },
+      { label: "Agence de crédit export",       intent: 'agency' },
+      { label: "Relations investisseurs",       intent: 'relations' }
+    ]
+  },
+  financing: {
+    msg: "Bpifrance propose des prêts directs, des garanties bancaires et des investissements en fonds propres adaptés à chaque étape — de la startup naissante à l'expansion internationale.",
+    chips: [
+      { label: "Comment faire une demande ?",           intent: 'apply' },
+      { label: "En savoir plus sur l'accompagnement",   intent: 'coaching' },
+      { label: "Recommencer",                           intent: 'restart' }
+    ]
+  },
+  coaching: {
+    msg: "Nos programmes d'accompagnement mettent les entrepreneurs en relation avec des experts pour construire leur stratégie, trouver les bons partenaires et accélérer leur développement en France et à l'étranger.",
+    chips: [
+      { label: "Comment trouver un accompagnateur ?", intent: 'apply' },
+      { label: "En savoir plus sur le financement",   intent: 'financing' },
+      { label: "Recommencer",                         intent: 'restart' }
+    ]
+  },
+  export: {
+    msg: "Notre assurance-crédit export protège vos ventes internationales contre le risque d'impayés. Nous proposons également des financements dédiés à l'export pour vous aider à remporter des contrats à l'étranger.",
+    chips: [
+      { label: "Comment en bénéficier ?", intent: 'apply' },
+      { label: "Autres solutions",        intent: 'restart' }
+    ]
+  },
+  equity: {
+    msg: "Bpifrance co-investit aux côtés des fonds de capital-investissement, soutenant l'écosystème d'innovation français de l'amorçage jusqu'aux stades de croissance avancés.",
+    chips: [
+      { label: "Comment co-investir ?",   intent: 'apply' },
+      { label: "Relations investisseurs", intent: 'relations' },
+      { label: "Recommencer",            intent: 'restart' }
+    ]
+  },
+  agency: {
+    msg: "En tant qu'agence de crédit export française, Bpifrance fournit des garanties et des solutions d'assurance pour aider les entreprises à remporter et exécuter des contrats internationaux.",
+    chips: [
+      { label: "En savoir plus",          intent: 'apply' },
+      { label: "Relations investisseurs", intent: 'relations' },
+      { label: "Recommencer",            intent: 'restart' }
+    ]
+  },
+  relations: {
+    msg: "Toutes les informations destinées aux investisseurs — résultats financiers, notations et programmes obligataires — sont disponibles sur notre portail dédié.",
+    chips: [
+      { label: "Accéder au portail", intent: 'apply' },
+      { label: "Recommencer",       intent: 'restart' }
+    ]
+  },
+  apply: {
+    msg: "Pour contacter nos équipes, rendez-vous sur bpifrance.fr ou prenez contact avec votre agence régionale Bpifrance. Nous serons ravis de vous accompagner !",
+    chips: [{ label: "Poser une autre question", intent: 'restart' }]
+  },
+  fallback: {
+    msg: "Je serais ravi(e) de vous aider ! Pourriez-vous me dire un peu plus qui vous êtes ?",
+    chips: INITIAL_CHIPS
+  }
+};
+
+const chatBody  = document.getElementById('chatBody');
+const chatChips = document.getElementById('chatChips');
+const chatInput = document.getElementById('chatInput');
+const chatSend  = document.getElementById('chatSend');
+
+function setChips(arr) {
+  chatChips.innerHTML = '';
+  arr.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'chat-chip';
+    btn.dataset.intent = c.intent;
+    btn.textContent = c.label;
+    chatChips.appendChild(btn);
+  });
+}
+
+function addMsg(text, role) {
+  const w = document.getElementById('chatWelcome');
+  if (w) w.remove();
+  openPanel();
+  const wrap = document.createElement('div');
+  wrap.className = 'cmsg ' + role;
+  const bub = document.createElement('div');
+  bub.className = 'cmsg-bubble';
+  bub.textContent = text;
+  wrap.appendChild(bub);
+  chatBody.appendChild(wrap);
+  chatBody.scrollTop = chatBody.scrollHeight;
+}
+
+function addMcpCall(name) {
+  const el = document.createElement('div');
+  el.className = 'mcp-call running';
+  el.innerHTML = `<span class="mcp-icon">{ }</span><span class="mcp-name">${name}</span><span class="mcp-status"></span>`;
+  chatBody.appendChild(el);
+  chatBody.scrollTop = chatBody.scrollHeight;
+  return el;
+}
+
+function addBotResponse(intent) {
+  if (intent === 'restart') { setChips(INITIAL_CHIPS); return; }
+  const node = CHAT_FLOWS[intent] || CHAT_FLOWS.fallback;
+  chatChips.innerHTML = '';
+
+  if (node.mcpCalls && node.mcpCalls.length) {
+    let delay = 0;
+    node.mcpCalls.forEach(name => {
+      setTimeout(() => {
+        const el = addMcpCall(name);
+        setTimeout(() => { el.classList.replace('running', 'done'); }, 650);
+      }, delay);
+      delay += 1000;
+    });
+    setTimeout(() => {
+      addMsg(node.msg, 'bot');
+      setChips(node.chips || INITIAL_CHIPS);
+    }, delay + 200);
+  } else {
+    const typing = document.createElement('div');
+    typing.className = 'typing';
+    typing.innerHTML = '<span></span><span></span><span></span>';
+    chatBody.appendChild(typing);
+    chatBody.scrollTop = chatBody.scrollHeight;
+    setTimeout(() => {
+      typing.remove();
+      addMsg(node.msg, 'bot');
+      setChips(node.chips || INITIAL_CHIPS);
+    }, 900);
+  }
+}
+
+chatChips.addEventListener('click', e => {
+  const btn = e.target.closest('.chat-chip');
+  if (!btn) return;
+  const intent = btn.dataset.intent;
+  if (intent === 'restart') { setChips(INITIAL_CHIPS); return; }
+  addMsg(btn.textContent, 'user');
+  addBotResponse(intent);
+});
+
+function submitChat() {
+  const val = chatInput.value.trim();
+  if (!val) return;
+  addMsg(val, 'user');
+  chatInput.value = '';
+  const lower = val.toLowerCase();
+  let intent = 'fallback';
+  if (/entrepren|fondateur|startup|pme|tpe|dirigeant/i.test(lower)) intent = 'entrepreneur';
+  else if (/institution|investisseur|fonds|capital/i.test(lower)) intent = 'institution';
+  else if (/financ|prêt|garanti|invest/i.test(lower)) intent = 'financing';
+  else if (/accompagn|coach|mentor|stratégie/i.test(lower)) intent = 'coaching';
+  else if (/export|assurance|international|étranger/i.test(lower)) intent = 'export';
+  addBotResponse(intent);
+}
+
+chatSend.addEventListener('click', submitChat);
+chatInput.addEventListener('keydown', e => { if (e.key === 'Enter') submitChat(); });
+
+/* ── ESC ── */
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeV(); closeNl(); closePanel(); } });
+</script>
+</body>
+</html>

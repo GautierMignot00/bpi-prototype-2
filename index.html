@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bpifrance — The One-Stop Shop for Entrepreneurs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Barlow:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* ── RESET ── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; border: none; background: none; font-family: inherit; }
+    ul { list-style: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ── TOKENS ── */
+    :root {
+      --yellow:  #ffcd00;
+      --dark:    #3A2E2E;
+      --cream:   #FAF8EE;
+      --gray-bg: #F0F0EE;
+      --gray2:   #706562;
+      --green:   #52B155;
+      --white:   #FFFFFF;
+      --font-h:  'Barlow Condensed', ui-sans-serif, sans-serif;
+      --font-b:  'Barlow', ui-sans-serif, sans-serif;
+      --font-i:  'IBM Plex Sans', ui-sans-serif, sans-serif;
+    }
+
+    body { font-family: var(--font-b); color: var(--dark); -webkit-font-smoothing: antialiased; }
+
+    /* ── HEADER ── */
+    .hdr { background: var(--white); height: 60px; border-bottom: 1px solid #E8E8E8; position: sticky; top: 0; z-index: 100; }
+    .hdr-inner { max-width: 1320px; margin: 0 auto; padding: 0 40px; height: 100%; display: flex; align-items: center; justify-content: center; gap: 64px; position: relative; }
+    .lang-sw { position: absolute; right: 40px; top: 50%; transform: translateY(-50%); display: flex; gap: 6px; align-items: center; }
+    .lang-btn { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; line-height: 1; text-decoration: none; opacity: .45; transition: opacity .15s, box-shadow .15s; }
+    .lang-btn:hover { opacity: .8; }
+    .lang-btn.active { opacity: 1; box-shadow: 0 0 0 2px var(--dark); }
+    .logo { flex-shrink: 0; display: flex; align-items: center; }
+    .logo img { height: 38px; width: auto; }
+    .nav-links { display: flex; gap: 36px; }
+    .nav-links a { font-size: 13px; font-weight: 500; color: var(--dark); opacity: .8; transition: opacity .15s; }
+    .nav-links a:hover { opacity: 1; }
+    .burger { display: none; flex-direction: column; gap: 5px; padding: 6px; margin-left: auto; }
+    .burger .bar { display: block; width: 22px; height: 2px; background: var(--dark); border-radius: 2px; transition: transform .3s, opacity .3s; }
+    .burger.open .bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .burger.open .bar:nth-child(2) { opacity: 0; }
+    .burger.open .bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ── MOBILE MENU ── */
+    .mob { display: none; position: fixed; inset: 0; top: 60px; background: var(--white); z-index: 99; flex-direction: column; padding: 24px 32px; border-top: 1px solid #F0EDE8; }
+    .mob.open { display: flex; }
+    .mob a { display: block; padding: 14px 0; font-size: 18px; font-weight: 600; border-bottom: 1px solid #F0EDE8; }
+
+    /* ── HERO ── */
+    .hero {
+      background-color: var(--yellow);
+      background-image: url('https://www.bpifrance.com/storage/sites/7/2024/01/Photon1.png');
+      background-size: cover;
+      background-position: right center;
+      background-repeat: no-repeat;
+      position: relative; overflow: hidden;
+      min-height: 600px; display: flex; align-items: center;
+      padding: 80px 0;
+    }
+    .hero-inner { max-width: 1320px; margin: 0 auto; padding: 0 72px; position: relative; z-index: 1; width: 100%; }
+    .hero-p1 {
+      font-family: var(--font-h); font-weight: 800;
+      font-size: clamp(32px, 3.8vw, 58px);
+      color: var(--dark); text-transform: uppercase;
+      line-height: .95; margin-bottom: 0;
+    }
+    .hero-p2 {
+      font-family: var(--font-h); font-weight: 800;
+      font-size: clamp(56px, 7vw, 108px);
+      color: var(--dark); text-transform: uppercase;
+      line-height: .92; margin-bottom: 44px;
+    }
+    .watch-btn {
+      display: inline-flex; align-items: center; gap: 12px;
+      background: var(--white); color: var(--dark);
+      padding: 14px 28px; border-radius: 100px;
+      font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+      transition: transform .2s, box-shadow .2s; cursor: pointer;
+    }
+    .watch-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.15); }
+    .play-ico { width: 24px; height: 24px; border-radius: 50%; background: var(--dark); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .play-ico::after { content: ''; margin-left: 3px; border-left: 9px solid white; border-top: 5px solid transparent; border-bottom: 5px solid transparent; }
+
+    /* ── BOTTOM CHAT BAR ── */
+    #chatBar { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); width: min(680px, calc(100vw - 32px)); z-index: 9999; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    #chatBarRow { display: flex; align-items: center; gap: 10px; background: white; border-radius: 100px; padding: 10px 10px 10px 22px; box-shadow: 0 4px 28px rgba(0,0,0,.13); width: 100%; border: 1.5px solid #E8E5DC; cursor: pointer; }
+    .chat-bar-input { flex: 1; border: none; outline: none; font-size: 15px; font-family: var(--font-b); color: #ABABAB; background: transparent; padding: 0; cursor: pointer; pointer-events: none; }
+    #chatPanel { position: fixed; top: 68px; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(16px); width: min(780px, calc(100vw - 48px)); border-radius: 16px; border: 1.5px solid #E0DDD6; box-shadow: 0 8px 64px rgba(0,0,0,.16); background: #fff; display: flex; flex-direction: column; z-index: 9998; overflow: hidden; opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; }
+    #chatPanel.open { opacity: 1; pointer-events: all; transform: translateX(-50%) translateY(0); }
+    .chat-panel-hdr { display: flex; align-items: center; justify-content: space-between; padding: 18px 28px; border-bottom: 1px solid #F0EDE8; flex-shrink: 0; }
+    .chat-panel-hdr img { height: 28px; width: auto; display: block; }
+    #chatClose { background: none; border: none; cursor: pointer; font-size: 18px; color: #999; line-height: 1; padding: 4px; }
+    #chatClose:hover { color: var(--dark); }
+    .chat-body { flex: 1; overflow-y: auto; padding: 32px 40px 20px; display: flex; flex-direction: column; gap: 14px; min-height: 0; }
+    .chat-welcome { color: var(--dark); font-size: 16px; line-height: 1.7; }
+    .cmsg { display: flex; flex-direction: column; max-width: 100%; }
+    .cmsg.bot { align-self: flex-start; width: 100%; }
+    .cmsg.user { align-self: flex-end; align-items: flex-end; max-width: 80%; }
+    .cmsg-bubble { font-size: 14px; line-height: 1.6; }
+    .cmsg.bot .cmsg-bubble { background: none; padding: 0; color: var(--dark); }
+    .cmsg.user .cmsg-bubble { background: #EFEFEF; color: var(--dark); padding: 10px 14px; border-radius: 18px 18px 4px 18px; }
+    #chatPanel .chat-chips { padding: 10px 28px 8px; justify-content: flex-start; border-top: 1px solid #F0EDE8; flex-shrink: 0; }
+    .chat-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+    .chat-chip { padding: 8px 16px; border: 1.5px solid #D0CCC5; border-radius: 100px; font-size: 13px; font-weight: 500; color: var(--dark); background: white; cursor: pointer; transition: border-color .15s, background .15s; font-family: var(--font-b); box-shadow: 0 2px 8px rgba(0,0,0,.07); }
+    .chat-chip:hover { border-color: var(--dark); background: var(--cream); }
+    .chat-panel-foot { display: flex; align-items: center; gap: 8px; padding: 10px 20px 16px; flex-shrink: 0; border-top: 1px solid #F0EDE8; }
+    .chat-input { flex: 1; border: none; outline: none; font-size: 15px; font-family: var(--font-b); color: var(--dark); background: transparent; padding: 0; }
+    .chat-input::placeholder { color: #ABABAB; }
+    .chat-send { width: 36px; height: 36px; border-radius: 50%; background: #0D0D0D; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: opacity .15s; }
+    .chat-send:hover { opacity: .8; }
+    .chat-send svg { width: 14px; height: 14px; fill: none; stroke: white; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    .typing { display: flex; align-items: center; gap: 5px; padding: 11px 15px; background: #F3F1EC; border-radius: 4px 14px 14px 14px; align-self: flex-start; }
+    .typing span { width: 6px; height: 6px; border-radius: 50%; background: #AAA; animation: blink 1.2s infinite; }
+    .typing span:nth-child(2) { animation-delay: .2s; }
+    .typing span:nth-child(3) { animation-delay: .4s; }
+    @keyframes blink { 0%,80%,100% { opacity: .2; } 40% { opacity: 1; } }
+    @media (max-width: 600px) { #chatBar { bottom: 16px; width: calc(100vw - 24px); } #chatPanel { top: 60px; bottom: 16px; left: 12px; width: calc(100vw - 24px); transform: translateY(16px); } #chatPanel.open { transform: translateY(0); } }
+
+    /* ── STATS ── */
+    .stats { background: var(--cream); padding: 96px 0 80px; }
+    .stats-inner { max-width: 1000px; margin: 0 auto; padding: 0 40px; text-align: center; }
+    .stats-inner h2 { font-family: var(--font-h); font-size: 52px; font-weight: 800; color: var(--dark); margin-bottom: 64px; }
+
+    /* Solid circles */
+    .rings { display: flex; align-items: center; justify-content: center; gap: 48px; margin-bottom: 56px; flex-wrap: wrap; }
+    .ring-wrap { width: 230px; height: 230px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .ring-wrap.c1 { background: var(--dark); }
+    .ring-wrap.c2 { background: var(--gray2); }
+    .ring-wrap.c3 { background: var(--yellow); }
+    .ring-inner { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 28px; }
+    .ring-num { font-family: var(--font-h); font-size: 24px; font-weight: 800; color: white; line-height: 1.2; margin-bottom: 8px; }
+    .ring-lbl { font-size: 13px; color: rgba(255,255,255,.75); line-height: 1.45; }
+    .ring-wrap.c3 .ring-num { color: var(--dark); }
+    .ring-wrap.c3 .ring-lbl { color: rgba(58,46,46,.7); }
+
+    /* arrow CTA cards */
+    .cta-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .cta-card { background: var(--white); border: 1px solid #E8E5DC; border-radius: 6px; padding: 24px 28px; display: flex; align-items: center; gap: 16px; cursor: pointer; transition: box-shadow .2s, border-color .2s; }
+    .cta-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.08); border-color: #C8C5BB; }
+    .cta-card-arr { font-size: 22px; flex-shrink: 0; }
+    .cta-card-title { font-size: 15px; font-weight: 600; color: var(--dark); line-height: 1.4; }
+
+    /* ── NEWS ── */
+    .news { background: var(--gray-bg); padding: 72px 0 80px; position: relative; overflow: hidden; }
+    .news-inner { max-width: 1100px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 1; }
+    .news h2 { font-family: var(--font-h); font-size: 46px; font-weight: 800; text-align: center; margin-bottom: 48px; color: var(--dark); }
+    .news-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+    .news-col-title { font-size: 20px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .news-col-title::before { content: ''; display: block; width: 4px; height: 24px; background: var(--yellow); border-radius: 2px; flex-shrink: 0; }
+
+    .n-art { background: var(--white); border-radius: 4px; padding: 18px; margin-bottom: 14px; display: grid; grid-template-columns: 1fr 116px; gap: 16px; cursor: pointer; transition: box-shadow .2s; }
+    .n-art:hover { box-shadow: 0 4px 16px rgba(0,0,0,.08); }
+    .n-art-img { border-radius: 3px; overflow: hidden; min-height: 90px; }
+    .n-art-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 9px; }
+    .tg { padding: 2px 7px; border-radius: 3px; font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: white; }
+    .tg-b { background: #1B6EC2; }
+    .tg-r { background: #CB2329; }   /* News — exact from reference */
+    .tg-g { background: #008631; }   /* Studies — exact from reference */
+    .tg-o { background: #ed7404; }   /* Stories — exact from reference */
+    .tg-p { background: #7B5EA7; }
+
+    .n-ttl { font-size: 15px; font-weight: 700; color: var(--dark); line-height: 1.4; margin-bottom: 8px; }
+    .n-exc { font-size: 13px; color: #777; line-height: 1.6; margin-bottom: 8px; }
+    .n-date { font-size: 12px; color: #AAA; }
+
+    .story-item { background: var(--white); border-radius: 4px; padding: 14px 18px; margin-bottom: 10px; }
+    .story-item:last-of-type { margin-bottom: 14px; }
+    .s-ttl { font-size: 14px; font-weight: 600; color: var(--dark); line-height: 1.4; margin-top: 9px; }
+
+    .nl-card { background: var(--yellow); border-radius: 20px; padding: 18px 20px; }
+    .nl-card-title { font-size: 20px; font-weight: 800; color: var(--dark); margin-bottom: 8px; font-family: var(--font-h); }
+    .nl-card-text { font-size: 14px; color: var(--dark); opacity: .8; margin-bottom: 18px; }
+    .sub-btn { display: inline-block; background: var(--dark); color: var(--white); padding: 10px 24px; border-radius: 100px; font-size: 13px; font-weight: 600; transition: opacity .2s; }
+    .sub-btn:hover { opacity: .82; }
+
+    .see-all { display: flex; justify-content: center; margin-top: 40px; }
+    .see-all-btn { background: var(--dark); color: var(--white); padding: 14px 36px; border-radius: 100px; font-size: 14px; font-weight: 600; transition: opacity .2s; }
+    .see-all-btn:hover { opacity: .82; }
+
+    /* floating shapes */
+    .fs { position: absolute; pointer-events: none; }
+    .fs-gpill  { width: 56px; height: 26px; background: var(--green); border-radius: 100px; left: 40px; top: 130px; transform: rotate(-18deg); }
+    .fs-dsq    { width: 48px; height: 48px; background: var(--dark); border-radius: 7px; left: 32px; top: 216px; transform: rotate(6deg); }
+    .fs-ycirc  { width: 34px; height: 34px; background: var(--yellow); border-radius: 50%; left: 52px; top: 330px; }
+    .fs-ytri   { width: 0; height: 0; border-left: 28px solid transparent; border-bottom: 44px solid var(--yellow); right: 64px; top: 46px; }
+    .fs-dcirc  { width: 40px; height: 40px; background: var(--dark); border-radius: 50%; right: 84px; top: 128px; }
+    .fs-gcirc2 { width: 46px; height: 46px; background: var(--green); border-radius: 50%; right: 44px; bottom: 88px; }
+
+    /* ── BRIDGE ── */
+    .bridge { background: var(--cream); padding: 64px 40px; text-align: center; }
+    .bridge-card { display: inline-flex; align-items: center; gap: 28px; background: var(--white); border-radius: 10px; padding: 28px 36px; text-align: left; border: 1px solid #E8E5DC; max-width: 560px; transition: box-shadow .2s; cursor: pointer; }
+    .bridge-card:hover { box-shadow: 0 6px 24px rgba(0,0,0,.09); }
+    .bridge-text h3 { font-family: var(--font-h); font-weight: 800; font-size: 26px; color: var(--dark); margin-bottom: 5px; }
+    .bridge-text p { font-size: 13px; color: #888; margin-bottom: 14px; }
+    .bridge-logo img { height: 24px; width: auto; }
+    .bridge-arr { font-size: 26px; margin-left: auto; flex-shrink: 0; }
+
+    /* ── FOOTER ── */
+    .ftr { display: grid; grid-template-columns: 1fr 1.35fr; }
+    .ftr-left { background: var(--yellow); padding: 56px 48px; position: relative; overflow: hidden; }
+    .ftr-left-ttl { font-family: var(--font-h); font-weight: 800; font-size: clamp(28px, 2.8vw, 38px); color: var(--dark); text-transform: uppercase; line-height: 1.0; margin-bottom: 36px; position: relative; z-index: 1; }
+    .ftr-left-ttl .sm { font-size: clamp(18px, 1.8vw, 24px); }
+    .ftr-soc-wrap { position: relative; z-index: 1; }
+    .ftr-soc-lbl { font-size: 13px; font-weight: 600; color: var(--dark); margin-bottom: 12px; }
+    .ftr-soc { display: flex; gap: 10px; }
+    .soc-btn { width: 38px; height: 38px; border-radius: 50%; background: var(--dark); display: flex; align-items: center; justify-content: center; transition: opacity .2s; }
+    .soc-btn:hover { opacity: .75; }
+    .soc-btn svg { width: 17px; height: 17px; fill: white; }
+    .ftr-vshape { position: absolute; bottom: -20px; right: -60px; width: 65%; opacity: .2; }
+
+    .ftr-right { background: var(--cream); padding: 56px 48px; }
+    .ftr-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+    .fc h4 { font-size: 16px; font-weight: 800; color: var(--dark); margin-bottom: 16px; }
+    .fc h5 { font-size: 13px; font-weight: 700; color: var(--dark); margin: 14px 0 8px; }
+    .fc li { margin-bottom: 7px; }
+    .fc a { font-size: 13px; color: #888; transition: color .15s; }
+    .fc a:hover { color: var(--dark); }
+    .ftr-nl-text { font-size: 13px; color: #777; margin-bottom: 14px; margin-top: 4px; line-height: 1.5; }
+    .ftr-sub-btn { display: inline-block; border: 2px solid var(--yellow); color: var(--dark); padding: 8px 22px; border-radius: 100px; font-size: 13px; font-weight: 600; transition: background .15s; }
+    .ftr-sub-btn:hover { background: var(--yellow); }
+
+    .ftr-bar { background: var(--white); border-top: 1px solid #E8E5DC; padding: 14px 48px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .ftr-bar-logo img { height: 32px; width: auto; }
+    .legal { display: flex; gap: 16px; flex-wrap: wrap; }
+    .legal a { font-size: 12px; color: #AAA; transition: color .15s; }
+    .legal a:hover { color: var(--dark); }
+    .ftr-copy { font-size: 12px; color: #AAA; }
+
+    /* ── MODALS ── */
+    .vmodal { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,.88); align-items: center; justify-content: center; padding: 24px; }
+    .vmodal.open { display: flex; }
+    .vframe { position: relative; width: 100%; max-width: 840px; }
+    .vclose { position: absolute; top: -46px; right: 0; width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,.15); color: white; font-size: 24px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background .2s; }
+    .vclose:hover { background: rgba(255,255,255,.3); }
+    .vph { background: var(--dark); border-radius: 12px; aspect-ratio: 16/9; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; border: 1px solid rgba(255,255,255,.1); }
+    .vph-play { width: 64px; height: 64px; border-radius: 50%; background: var(--yellow); display: flex; align-items: center; justify-content: center; }
+    .vph-play::after { content: ''; margin-left: 5px; border-left: 22px solid var(--dark); border-top: 13px solid transparent; border-bottom: 13px solid transparent; }
+    .vph p { color: rgba(255,255,255,.75); font-size: 16px; font-weight: 600; }
+    .vph small { color: rgba(255,255,255,.35); font-size: 13px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .burger { display: flex; }
+      .audience-inner { grid-template-columns: 1fr; }
+      .news-cols { grid-template-columns: 1fr; }
+      .rings { gap: 20px; }
+      .ftr { grid-template-columns: 1fr; }
+      .ftr-cols { grid-template-columns: 1fr 1fr; }
+      .cta-cards { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .hero-inner { padding: 0 24px; }
+      .hdr-inner { padding: 0 20px; }
+      .audience-inner { padding: 24px 20px 0; }
+      .news-inner { padding: 0 20px; }
+      .aud-items { grid-template-columns: 1fr; }
+      .ftr-cols { grid-template-columns: 1fr; }
+      .ftr-left, .ftr-right { padding: 40px 28px; }
+      .ftr-bar { padding: 14px 24px; flex-direction: column; align-items: flex-start; }
+      .legal { gap: 10px; }
+      .n-art { grid-template-columns: 1fr; }
+      .n-art-img { min-height: 140px; }
+      .fs-gpill, .fs-dsq, .fs-ycirc, .fs-ytri, .fs-dcirc, .fs-gcirc2 { display: none; }
+      .ring-wrap { width: 165px; height: 165px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<header class="hdr">
+  <div class="hdr-inner">
+    <a href="#" class="logo" aria-label="Bpifrance — Serving the Future">
+      <img src="https://www.bpifrance.com/storage/sites/7/2024/01/logo-bpi-serving-the-future.png"
+           alt="bpifrance | Serving the Future" height="38">
+    </a>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="#mission">Our mission</a>
+      <a href="#why">Why France</a>
+      <a href="#history">Our history</a>
+      <a href="#international">International presence</a>
+      <a href="#news">Our news</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Menu" aria-expanded="false">
+      <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+    </button>
+    <div class="lang-sw">
+      <a href="index.html" class="lang-btn active" aria-label="English">🇬🇧</a>
+      <a href="index-fr.html" class="lang-btn" aria-label="Français">🇫🇷</a>
+    </div>
+  </div>
+</header>
+
+<!-- mobile nav -->
+<div class="mob" id="mobMenu" aria-hidden="true">
+  <a href="#mission"       class="mob-lnk">Our mission</a>
+  <a href="#why"           class="mob-lnk">Why France</a>
+  <a href="#history"       class="mob-lnk">Our history</a>
+  <a href="#international" class="mob-lnk">International presence</a>
+  <a href="#news"          class="mob-lnk">Our news</a>
+</div>
+
+<!-- ══ HERO ══ -->
+<section class="hero" aria-labelledby="hero-ttl">
+  <div class="hero-inner">
+    <p class="hero-p1" id="hero-ttl">Bpifrance,</p>
+    <p class="hero-p2">the one-stop shop<br>for entrepreneurs!</p>
+    <button class="watch-btn" id="watchBtn" aria-label="Watch presentation video">
+      <span class="play-ico" aria-hidden="true"></span>
+      Watch video
+    </button>
+  </div>
+</section>
+
+<!-- ══ STATS ══ -->
+<section id="mission" class="stats" aria-labelledby="stats-h2">
+  <div class="stats-inner">
+    <h2 id="stats-h2">Bpifrance at first glance</h2>
+
+    <!-- SVG ring circles -->
+    <div class="rings">
+      <div class="ring-wrap c1" role="figure" aria-label="17.32 billion euros of direct funding">
+        <div class="ring-inner">
+          <div class="ring-num">€ 17,32 Bn</div>
+          <div class="ring-lbl">direct funding</div>
+        </div>
+      </div>
+      <div class="ring-wrap c2" role="figure" aria-label="8.2 billion euros of guaranteed bank loans">
+        <div class="ring-inner">
+          <div class="ring-num">€ 8,2 Bn</div>
+          <div class="ring-lbl">of guaranteed<br>bank loans</div>
+        </div>
+      </div>
+      <div class="ring-wrap c3" role="figure" aria-label="4.47 billion euros of investment">
+        <div class="ring-inner">
+          <div class="ring-num">€ 4,47 Bn</div>
+          <div class="ring-lbl">of investment</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Arrow CTA cards -->
+    <div class="cta-cards">
+      <a href="#international" class="cta-card">
+        <span class="cta-card-arr">→</span>
+        <span class="cta-card-title">A global network</span>
+      </a>
+      <a href="#history" class="cta-card">
+        <span class="cta-card-arr">→</span>
+        <span class="cta-card-title">A century of encouraging entrepreneurship</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ NEWS ══ -->
+<section id="news" class="news" aria-labelledby="news-h2">
+  <!-- floating decorative shapes -->
+  <div class="fs fs-gpill"  aria-hidden="true"></div>
+  <div class="fs fs-dsq"    aria-hidden="true"></div>
+  <div class="fs fs-ycirc"  aria-hidden="true"></div>
+  <div class="fs fs-ytri"   aria-hidden="true"></div>
+  <div class="fs fs-dcirc"  aria-hidden="true"></div>
+  <div class="fs fs-gcirc2" aria-hidden="true"></div>
+
+  <div class="news-inner">
+    <h2 id="news-h2">Our News</h2>
+    <div class="news-cols">
+
+      <!-- Left: News articles -->
+      <div>
+        <div class="news-col-title">News</div>
+        <article class="n-art">
+          <div>
+            <div class="tags">
+              <span class="tg tg-b">Africa</span>
+              <span class="tg tg-b">Entrepreneurs</span>
+              <span class="tg tg-b">International</span>
+              <span class="tg tg-r">News</span>
+            </div>
+            <div class="n-ttl">Co-Industrialization, A Long-Term Growth Strategy for French Companies In Africa</div>
+            <div class="n-exc">Africa has become a strategic priority for French companies seeking export opportunities. But beyond traditional trade relationships, a new model…</div>
+            <div class="n-date">20/04/2026</div>
+          </div>
+          <div class="n-art-img">
+            <img src="https://www.bpifrance.com/storage/sites/7/2026/04/pexels-amurephotography-9833514-768x512.jpg"
+                 alt="Co-industrialization in Africa" loading="lazy">
+          </div>
+        </article>
+        <article class="n-art">
+          <div>
+            <div class="tags">
+              <span class="tg tg-b">Bpifrance</span>
+              <span class="tg tg-b">Entrepreneuriat</span>
+              <span class="tg tg-g">Studies</span>
+            </div>
+            <div class="n-ttl">Impact of Bpifrance :</div>
+            <div class="n-exc">The indicator booklet for Bpifrance's actions in 2023 presents an in-depth analysis of the impact of the public investment bank's…</div>
+            <div class="n-date">15/01/2025</div>
+          </div>
+          <div class="n-art-img">
+            <img src="https://www.bpifrance.com/storage/sites/7/2025/01/pexels-goumbik-590022-768x509.jpg"
+                 alt="Impact of Bpifrance" loading="lazy">
+          </div>
+        </article>
+      </div>
+
+      <!-- Right: Success stories + Newsletter -->
+      <div>
+        <div class="news-col-title">Success stories</div>
+        <div class="story-item">
+          <div class="tags">
+            <span class="tg tg-b">Entrepreneurs</span>
+            <span class="tg tg-b">International</span>
+            <span class="tg tg-r">News</span>
+            <span class="tg tg-b">Opportunities</span>
+            <span class="tg tg-o">Stories</span>
+          </div>
+          <div class="s-ttl">Big 2025: A Singular Event To Help French Companies Boost International Development</div>
+        </div>
+        <div class="story-item">
+          <div class="tags">
+            <span class="tg tg-b">Bpifrance</span>
+            <span class="tg tg-b">Economy</span>
+            <span class="tg tg-b">International</span>
+            <span class="tg tg-r">News</span>
+            <span class="tg tg-o">Stories</span>
+          </div>
+          <div class="s-ttl">Venture capital: in 10 years, Bpifrance has made a major contribution to the growth of the French start-up financing ecosystem</div>
+        </div>
+        <div class="nl-card">
+          <div class="nl-card-title">Newsletter</div>
+          <div class="nl-card-text">Get your personalized newsletter straight to your mailbox</div>
+          <a href="#" class="sub-btn" id="subBtn">Subscribe</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="see-all">
+      <a href="#" class="see-all-btn">See all news</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ BRIDGE ══ -->
+<section id="why" class="bridge" aria-label="Bpifrance.fr">
+  <a href="#" class="bridge-card">
+    <div class="bridge-text">
+      <h3>Bpifrance.fr</h3>
+      <p>Solutions for French entrepreneurs<br>Find out more information here</p>
+      <div class="bridge-logo">
+        <img src="https://www.bpifrance.com/storage/sites/7/2024/01/logo-bpifrance-servir-l-avenir.svg"
+             alt="bpifrance — servir l'avenir">
+      </div>
+    </div>
+    <div class="bridge-arr">→</div>
+  </a>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="ftr">
+    <!-- Yellow left -->
+    <div class="ftr-left">
+      <svg class="ftr-vshape" viewBox="0 0 500 380" fill="none" aria-hidden="true">
+        <path d="M 60,360 C 60,360 130,200 220,240 C 310,280 360,60 460,20" stroke="white" stroke-width="90" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div style="position:absolute;top:24px;right:80px;width:72px;height:72px;border-radius:50%;background:var(--green);" aria-hidden="true"></div>
+
+      <div class="ftr-left-ttl">
+        <span class="sm">Bpifrance,</span><br>
+        The one-stop shop<br>
+        for entrepreneurs!
+      </div>
+      <div class="ftr-soc-wrap">
+        <div class="ftr-soc-lbl">Follow us!</div>
+        <div class="ftr-soc">
+          <a href="#" class="soc-btn" aria-label="Facebook">
+            <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="#" class="soc-btn" aria-label="YouTube">
+            <svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.97C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="rgba(58,46,46,0.9)"/></svg>
+          </a>
+          <a href="#" class="soc-btn" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          </a>
+          <a href="#" class="soc-btn" aria-label="Instagram">
+            <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" fill="rgba(58,46,46,0.85)"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke="rgba(58,46,46,0.85)" stroke-width="2"/></svg>
+          </a>
+          <a href="#" class="soc-btn" aria-label="X (Twitter)">
+            <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cream right -->
+    <div class="ftr-right">
+      <div class="ftr-cols">
+        <div class="fc">
+          <h4>Who we are</h4>
+          <ul>
+            <li><a href="#">Our mission</a></li>
+            <li><a href="#">Why France</a></li>
+            <li><a href="#">Our history</a></li>
+            <li><a href="#">International presence</a></li>
+            <li><a href="#">Our news</a></li>
+          </ul>
+          <h4 style="margin-top:28px;">Documentation</h4>
+          <ul><li><a href="#">Document library</a></li></ul>
+          <h4 style="margin-top:28px;">Newsletter</h4>
+          <div class="ftr-nl-text">Get your personalized newsletter straight to your mailbox</div>
+          <a href="#" class="ftr-sub-btn">Subscribe</a>
+        </div>
+        <div class="fc">
+          <h4>What we do</h4>
+          <h5>Entrepreneurs</h5>
+          <ul>
+            <li><a href="#">Bank</a></li>
+            <li><a href="#">Coach</a></li>
+            <li><a href="#">Export Credit Insurance</a></li>
+            <li><a href="#">Solutions for foreign companies</a></li>
+          </ul>
+          <h5>Institutions</h5>
+          <ul>
+            <li><a href="#">Private equity</a></li>
+            <li><a href="#">Export credit agency</a></li>
+            <li><a href="#">States and Institutional cooperation</a></li>
+            <li><a href="#">Investor relations</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- bottom bar -->
+  <div class="ftr-bar">
+    <div class="ftr-bar-logo">
+      <img src="https://www.bpifrance.com/storage/sites/7/2024/01/logo-bpi-serving-the-future.png"
+           alt="bpifrance — Serving the Future" height="32">
+    </div>
+    <nav class="legal" aria-label="Legal links">
+      <a href="#">Legal notices</a>
+      <a href="#">Personal data</a>
+      <a href="#">Cookie management</a>
+      <a href="#">Accessibility: not compliant</a>
+    </nav>
+    <div class="ftr-copy">© Bpifrance 2024</div>
+  </div>
+</footer>
+
+<!-- ══ VIDEO MODAL ══ -->
+<div class="vmodal" id="vModal" role="dialog" aria-label="Watch video" aria-modal="true">
+  <div class="vframe">
+    <button class="vclose" id="vClose" aria-label="Close">×</button>
+    <div class="vph">
+      <div class="vph-play"></div>
+      <p>Bpifrance — The One-Stop Shop for Entrepreneurs</p>
+      <small>Replace with your actual video URL</small>
+    </div>
+  </div>
+</div>
+
+<!-- ══ NEWSLETTER MODAL ══ -->
+<div class="vmodal" id="nlModal" role="dialog" aria-label="Newsletter" aria-modal="true">
+  <div class="vframe" style="max-width:480px;">
+    <button class="vclose" id="nlClose" aria-label="Close">×</button>
+    <div class="vph" style="aspect-ratio:auto;padding:48px 40px;gap:20px;border-radius:10px;">
+      <div style="width:100%;text-align:left;">
+        <div style="font-family:var(--font-h);font-size:30px;font-weight:800;color:white;margin-bottom:8px;">Newsletter</div>
+        <div style="font-size:14px;color:rgba(255,255,255,.65);margin-bottom:24px;">Get your personalized newsletter straight to your mailbox</div>
+        <form id="nlForm" novalidate style="display:flex;gap:8px;flex-wrap:wrap;">
+          <input type="email" placeholder="Your email address" required
+            style="flex:1;min-width:180px;padding:12px 16px;border:none;border-radius:4px;font-size:14px;font-family:var(--font-b);outline:none;">
+          <button type="submit"
+            style="background:var(--yellow);color:var(--dark);padding:12px 20px;border-radius:4px;font-size:14px;font-weight:700;font-family:var(--font-b);cursor:pointer;border:none;white-space:nowrap;">
+            Subscribe
+          </button>
+        </form>
+        <div id="nlOk" style="display:none;margin-top:16px;padding:12px 16px;background:rgba(82,177,85,.2);border-radius:4px;color:rgba(255,255,255,.9);font-size:14px;font-weight:600;">
+          ✓ You have been successfully subscribed!
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BOTTOM CHAT BAR ══ -->
+<div id="chatPanel" role="dialog" aria-label="Bpifrance assistant" aria-modal="false">
+  <div class="chat-panel-hdr">
+    <img src="https://www.bpifrance.com/storage/sites/7/2024/01/logo-bpi-serving-the-future.png" alt="Bpifrance" height="24">
+    <button id="chatClose" aria-label="Close">✕</button>
+  </div>
+  <div class="chat-body" id="chatBody">
+    <div class="chat-welcome" id="chatWelcome">Ask me anything about Bpifrance, or click one of the suggestions below to get started.</div>
+  </div>
+  <div class="chat-chips" id="chatChips">
+    <button class="chat-chip" data-intent="entrepreneur">I'm an entrepreneur</button>
+    <button class="chat-chip" data-intent="institution">I'm an institution or investor</button>
+  </div>
+  <div class="chat-panel-foot">
+    <input class="chat-input" id="chatInput" type="text" placeholder="" autocomplete="off" aria-label="Ask a question">
+    <button class="chat-send" id="chatSend" aria-label="Send">
+      <svg viewBox="0 0 24 24"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>
+    </button>
+  </div>
+</div>
+<div id="chatBar">
+  <div id="chatBarRow">
+    <input class="chat-bar-input" placeholder="How can Bpifrance support my startup?" readonly aria-label="Open chat">
+    <button class="chat-send" aria-hidden="true" tabindex="-1">
+      <svg viewBox="0 0 24 24"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+/* ── BURGER MENU ── */
+const burger  = document.getElementById('burger');
+const mobMenu = document.getElementById('mobMenu');
+let menuOpen  = false;
+function toggleMenu() {
+  menuOpen = !menuOpen;
+  burger.classList.toggle('open', menuOpen);
+  burger.setAttribute('aria-expanded', menuOpen);
+  mobMenu.classList.toggle('open', menuOpen);
+  mobMenu.setAttribute('aria-hidden', !menuOpen);
+  document.body.style.overflow = menuOpen ? 'hidden' : '';
+}
+burger.addEventListener('click', toggleMenu);
+document.querySelectorAll('.mob-lnk').forEach(a => a.addEventListener('click', () => { if (menuOpen) toggleMenu(); }));
+
+/* ── SMOOTH SCROLL ── */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', function(e) {
+    const id = this.getAttribute('href');
+    const t  = document.querySelector(id);
+    if (!t || id === '#') return;
+    e.preventDefault();
+    if (menuOpen) toggleMenu();
+    t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+/* ── VIDEO MODAL ── */
+const vModal   = document.getElementById('vModal');
+const watchBtn = document.getElementById('watchBtn');
+const vClose   = document.getElementById('vClose');
+function openV()  { vModal.classList.add('open');  document.body.style.overflow = 'hidden'; }
+function closeV() { vModal.classList.remove('open'); document.body.style.overflow = ''; }
+watchBtn.addEventListener('click', openV);
+vClose.addEventListener('click', closeV);
+vModal.addEventListener('click', e => { if (e.target === vModal) closeV(); });
+
+/* ── NEWSLETTER MODAL ── */
+const nlModal = document.getElementById('nlModal');
+const nlClose = document.getElementById('nlClose');
+function openNl()  { nlModal.classList.add('open');  document.body.style.overflow = 'hidden'; }
+function closeNl() { nlModal.classList.remove('open'); document.body.style.overflow = ''; }
+document.querySelectorAll('#subBtn, .ftr-sub-btn').forEach(b => b.addEventListener('click', e => { e.preventDefault(); openNl(); }));
+nlClose.addEventListener('click', closeNl);
+nlModal.addEventListener('click', e => { if (e.target === nlModal) closeNl(); });
+document.getElementById('nlForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const inp = this.querySelector('input');
+  if (!inp.value || !inp.validity.valid) { inp.focus(); return; }
+  this.style.display = 'none';
+  document.getElementById('nlOk').style.display = 'block';
+  setTimeout(closeNl, 2400);
+});
+
+/* ── CHAT PANEL ── */
+const chatPanel = document.getElementById('chatPanel');
+const chatBar   = document.getElementById('chatBar');
+function openPanel() { chatPanel.classList.add('open'); chatBar.style.display = 'none'; }
+function closePanel() { chatPanel.classList.remove('open'); chatBar.style.display = ''; }
+document.getElementById('chatClose').addEventListener('click', closePanel);
+chatBar.addEventListener('click', function(e) {
+  openPanel();
+  setTimeout(() => document.getElementById('chatInput').focus(), 220);
+});
+
+/* ── CHAT GHOST TYPING ── */
+(function() {
+  const prompts = [
+    "I'm looking for export financing…",
+    "How can Bpifrance support my startup?",
+    "What solutions exist for foreign investors?",
+    "I need coaching for my business…",
+    "I'm an institution looking to co-invest…"
+  ];
+  const inp = document.getElementById('chatInput');
+  let pi = 0, ci = 0, deleting = false, paused = false, timer = null;
+
+  function tick() {
+    if (paused) return;
+    const target = prompts[pi];
+    if (!deleting) {
+      ci++;
+      inp.placeholder = target.slice(0, ci);
+      if (ci === target.length) { deleting = true; timer = setTimeout(tick, 2200); return; }
+      timer = setTimeout(tick, 52);
+    } else {
+      ci--;
+      inp.placeholder = target.slice(0, ci);
+      if (ci === 0) { deleting = false; pi = (pi + 1) % prompts.length; timer = setTimeout(tick, 420); return; }
+      timer = setTimeout(tick, 28);
+    }
+  }
+  tick();
+
+  inp.addEventListener('focus', () => { paused = true; clearTimeout(timer); inp.placeholder = 'Ask me anything…'; });
+  inp.addEventListener('blur',  () => {
+    if (!inp.value) { paused = false; inp.placeholder = prompts[pi].slice(0, ci); tick(); }
+  });
+})();
+
+/* ── CHAT ── */
+const INITIAL_CHIPS = [
+  { label: "I'm an entrepreneur",          intent: 'entrepreneur' },
+  { label: "I'm an institution or investor", intent: 'institution' }
+];
+
+const CHAT_FLOWS = {
+  entrepreneur: {
+    msg: "Great! As an entrepreneur, Bpifrance can support your growth through financing, coaching, and export solutions. What are you looking for?",
+    chips: [
+      { label: "I need financing",      intent: 'financing' },
+      { label: "I need coaching",       intent: 'coaching' },
+      { label: "Export support",        intent: 'export' }
+    ]
+  },
+  institution: {
+    msg: "As an institution or investor, Bpifrance offers co-investment, export credit, and institutional cooperation. What interests you most?",
+    chips: [
+      { label: "Private equity co-investment", intent: 'equity' },
+      { label: "Export credit agency",         intent: 'agency' },
+      { label: "Investor relations",           intent: 'relations' }
+    ]
+  },
+  financing: {
+    msg: "Bpifrance offers direct loans, bank guarantees, and equity investments tailored to every stage — from early-stage startup to international expansion.",
+    chips: [
+      { label: "How do I apply?",          intent: 'apply' },
+      { label: "Tell me about coaching",   intent: 'coaching' },
+      { label: "Start over",               intent: 'restart' }
+    ]
+  },
+  coaching: {
+    msg: "Our coaching programs connect entrepreneurs with experts to build their strategy, find the right partners, and accelerate development in France and abroad.",
+    chips: [
+      { label: "How do I find a coach?",   intent: 'apply' },
+      { label: "Tell me about financing",  intent: 'financing' },
+      { label: "Start over",               intent: 'restart' }
+    ]
+  },
+  export: {
+    msg: "Our Export Credit Insurance protects your international sales against buyer default. We also offer dedicated export financing to help you win contracts abroad.",
+    chips: [
+      { label: "How do I get covered?",    intent: 'apply' },
+      { label: "Other solutions",          intent: 'restart' }
+    ]
+  },
+  equity: {
+    msg: "Bpifrance co-invests alongside private equity funds, supporting the French innovation ecosystem from seed to late-stage growth.",
+    chips: [
+      { label: "How to co-invest?",   intent: 'apply' },
+      { label: "Investor relations",  intent: 'relations' },
+      { label: "Start over",          intent: 'restart' }
+    ]
+  },
+  agency: {
+    msg: "As France's export credit agency, Bpifrance provides guarantees and insurance solutions to help companies win and execute international contracts.",
+    chips: [
+      { label: "Learn more",          intent: 'apply' },
+      { label: "Investor relations",  intent: 'relations' },
+      { label: "Start over",          intent: 'restart' }
+    ]
+  },
+  relations: {
+    msg: "All investor relations information — financial results, ratings, and bond programs — is available on our dedicated investor portal.",
+    chips: [
+      { label: "Access the portal",  intent: 'apply' },
+      { label: "Start over",         intent: 'restart' }
+    ]
+  },
+  apply: {
+    msg: "To get in touch with our teams, visit bpifrance.com or contact your nearest Bpifrance regional office. We look forward to hearing from you!",
+    chips: [
+      { label: "Ask another question", intent: 'restart' }
+    ]
+  },
+  fallback: {
+    msg: "I'd be happy to help! Could you tell me a bit more about yourself?",
+    chips: INITIAL_CHIPS
+  }
+};
+
+const chatBody  = document.getElementById('chatBody');
+const chatChips = document.getElementById('chatChips');
+const chatInput = document.getElementById('chatInput');
+const chatSend  = document.getElementById('chatSend');
+
+function setChips(chipsArr) {
+  chatChips.innerHTML = '';
+  chipsArr.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'chat-chip';
+    btn.dataset.intent = c.intent;
+    btn.textContent = c.label;
+    chatChips.appendChild(btn);
+  });
+}
+
+function addMsg(text, role) {
+  const welcome = document.getElementById('chatWelcome');
+  if (welcome) welcome.remove();
+  openPanel();
+  const wrap = document.createElement('div');
+  wrap.className = 'cmsg ' + role;
+  const bub = document.createElement('div');
+  bub.className = 'cmsg-bubble';
+  bub.textContent = text;
+  wrap.appendChild(bub);
+  chatBody.appendChild(wrap);
+  chatBody.scrollTop = chatBody.scrollHeight;
+}
+
+function addBotResponse(intent) {
+  if (intent === 'restart') { setChips(INITIAL_CHIPS); return; }
+  const node = CHAT_FLOWS[intent] || CHAT_FLOWS.fallback;
+  chatChips.innerHTML = '';
+  const typing = document.createElement('div');
+  typing.className = 'typing';
+  typing.innerHTML = '<span></span><span></span><span></span>';
+  chatBody.appendChild(typing);
+  chatBody.scrollTop = chatBody.scrollHeight;
+  setTimeout(() => {
+    typing.remove();
+    addMsg(node.msg, 'bot');
+    setChips(node.chips || INITIAL_CHIPS);
+  }, 900);
+}
+
+chatChips.addEventListener('click', e => {
+  const btn = e.target.closest('.chat-chip');
+  if (!btn) return;
+  const intent = btn.dataset.intent;
+  if (intent === 'restart') { setChips(INITIAL_CHIPS); return; }
+  addMsg(btn.textContent, 'user');
+  addBotResponse(intent);
+});
+
+function submitChat() {
+  const val = chatInput.value.trim();
+  if (!val) return;
+  addMsg(val, 'user');
+  chatInput.value = '';
+  const lower = val.toLowerCase();
+  let intent = 'fallback';
+  if (/entrepren|founder|startup|start-up|sme|pme|business/i.test(lower)) intent = 'entrepreneur';
+  else if (/institution|investor|equity|fund/i.test(lower)) intent = 'institution';
+  else if (/financ|loan|guarantee|invest/i.test(lower)) intent = 'financing';
+  else if (/coach|mentor|support|strategy/i.test(lower)) intent = 'coaching';
+  else if (/export|insurance|international|abroad/i.test(lower)) intent = 'export';
+  addBotResponse(intent);
+}
+
+chatSend.addEventListener('click', submitChat);
+chatInput.addEventListener('keydown', e => { if (e.key === 'Enter') submitChat(); });
+
+/* ── ESC ── */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeV(); closeNl(); closePanel(); }
+});
+</script>
+</body>
+</html>
